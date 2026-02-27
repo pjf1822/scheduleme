@@ -6,21 +6,24 @@ import { addBusyBlockAction } from "../actions/addBusyBlock";
 import { getBusyDateMap } from "@/lib/utils/dates/getBusyDateMap";
 import { createBusyBlockFromDate } from "@/lib/utils/calendar/createBusyBlockFromDate";
 import { removeBusyBlockAction } from "../actions/removeBusyBlock";
+import { useRef } from "react";
+import { BusyBlock } from "@/lib/types/dbexports";
 
-type BusyBlock = {
-  id: string;
-  start_time: string;
-  end_time: string;
-};
 type Props = {
   busyBlocks: BusyBlock[];
 };
+
 const CalendarComp = ({ busyBlocks }: Props) => {
+  const pendingDates = useRef(new Set<string>());
   const busyDateMap = getBusyDateMap(busyBlocks);
 
   const handleDateClick = async (info: any) => {
     const dateKey = info.dateStr;
 
+    if (pendingDates.current.has(dateKey)) {
+      return;
+    }
+    pendingDates.current.add(dateKey);
     try {
       if (busyDateMap.has(dateKey)) {
         const blockId = busyDateMap.get(dateKey)!;
@@ -32,6 +35,8 @@ const CalendarComp = ({ busyBlocks }: Props) => {
       await addBusyBlockAction(block);
     } catch (err) {
       console.error("Toggle failed", err);
+    } finally {
+      pendingDates.current.delete(dateKey);
     }
   };
   return (

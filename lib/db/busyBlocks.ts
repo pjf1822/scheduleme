@@ -40,6 +40,5 @@ export async function deleteBusyBlock(id: string) {
 
   const { error } = await supabase.from("busy_blocks").delete().eq("id", id);
 
-  console.log(error);
   if (error) throw error;
 }

@@ -1,7 +1,4 @@
-import {
-  addBusyBlock,
-  getCurrentUserBusyBlocks,
-} from "@/lib/services/busyBlocks";
+import { getCurrentUserBusyBlocks } from "@/lib/services/busyBlocks";
 import CalendarComp from "../components/CalendarComp";
 
 const page = async () => {
