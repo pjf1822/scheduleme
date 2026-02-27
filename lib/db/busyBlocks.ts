@@ -34,3 +34,12 @@ export async function insertBusyBlock(params: {
 
   return data;
 }
+
+export async function deleteBusyBlock(id: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("busy_blocks").delete().eq("id", id);
+
+  console.log(error);
+  if (error) throw error;
+}

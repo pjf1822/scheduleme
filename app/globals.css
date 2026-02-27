@@ -24,3 +24,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.busy-day {
+  background-color: #fee2e2 !important;
+  border: 2px solid #ef4444 !important;
+  position: relative !important;
+  opacity: 0.9;
+}
+
+.busy-x {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 4rem; /* Bigger – feel free to go 4.5rem or 5rem for dramatic effect */
+  font-weight: bold;
+  color: #dc2626; /* Or #c53030 for darker red */
+  line-height: 1;
+  pointer-events: none; /* Important: clicks go through to select date if needed */
+  z-index: 10; /* Above bg, but below day number if you want number visible */
+
+  /* Extra polish */
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.pending-day {
+  pointer-events: none;
+  opacity: 0.6;
+}
