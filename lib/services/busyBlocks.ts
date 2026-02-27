@@ -38,3 +38,17 @@ export async function addBusyBlock(params: { startTime: Date; endTime: Date }) {
     endTime: params.endTime.toISOString(),
   });
 }
+
+import { deleteBusyBlock } from "@/lib/db/busyBlocks";
+
+export async function removeBusyBlock(id: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Not authenticated");
+
+  return deleteBusyBlock(id);
+}
