@@ -13,6 +13,7 @@ const Navbar = ({
       {userRole === "admin" && <Link href="/admin">Admin</Link>}
       {email}
       <Link href="dashboard">home</Link>
+      <Link href="settings">Settings</Link>
       <LogoutButton />
     </div>
   );
