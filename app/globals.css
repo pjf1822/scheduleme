@@ -152,3 +152,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.fc .fc-daygrid-event {
+  pointer-events: none;
+  cursor: default;
+}

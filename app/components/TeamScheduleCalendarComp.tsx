@@ -9,6 +9,7 @@ import AvailabilityModal from "./AvailabilityModal";
 import { getAvailableMembersForDate } from "@/lib/utils/calendar/getAvailableMembersForDate";
 import { getBusyBlocksByMember } from "@/lib/utils/calendar/getBusyBlocksByMember";
 import { getEventsFromScheduleBlocks } from "@/lib/utils/calendar/getEventsFromScheduleBlocks";
+import { getScheduleBlocksForDate } from "@/lib/utils/calendar/getScheduleBlocksForDate";
 type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
@@ -33,8 +34,15 @@ const TeamScheduleCalendarComp = ({
     setSelectedDate(info.dateStr);
   };
 
+  const blocksForSelectedDate = getScheduleBlocksForDate(
+    selectedDate,
+    scheduleBlocks,
+  );
+  const assignedUserIds = new Set(blocksForSelectedDate.map((b) => b.user_id));
   const availableMembers = selectedDate
-    ? getAvailableMembersForDate(selectedDate, teamMembers, busyBlocks)
+    ? getAvailableMembersForDate(selectedDate, teamMembers, busyBlocks).filter(
+        (member) => !assignedUserIds.has(member.user_id),
+      )
     : [];
 
   return (
@@ -49,6 +57,13 @@ const TeamScheduleCalendarComp = ({
         height="auto"
         dateClick={handleDateClick}
         events={events}
+        eventInteractive={false}
+        dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
+        eventClick={(info) => {
+          info.jsEvent.preventDefault();
+          const dateStr = info.event.start?.toISOString().split("T")[0];
+          setSelectedDate(dateStr ?? null);
+        }}
       />
 
       <div>
@@ -69,6 +84,7 @@ const TeamScheduleCalendarComp = ({
       <AvailabilityModal
         selectedDate={selectedDate}
         availableMembers={availableMembers}
+        blocksForSelectedDate={blocksForSelectedDate}
         onClose={() => setSelectedDate(null)}
         teamId={teamId}
         onAssign={(newBlock) =>

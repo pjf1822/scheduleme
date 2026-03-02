@@ -13,6 +13,7 @@ import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";
 type Props = {
   selectedDate: string | null;
   availableMembers: TeamMember[];
+  blocksForSelectedDate: TeamSchedule[];
   onClose: () => void;
   teamId: string;
   onAssign: (newBlock: TeamSchedule) => void;
@@ -21,6 +22,7 @@ type Props = {
 const AvailabilityModal = ({
   selectedDate,
   availableMembers,
+  blocksForSelectedDate,
   onClose,
   teamId,
   onAssign,
@@ -65,6 +67,22 @@ const AvailabilityModal = ({
               </li>
             ))}
           </ul>
+        )}
+        {blocksForSelectedDate.length > 0 && (
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">Assigned</h3>
+
+            <ul className="space-y-2">
+              {blocksForSelectedDate.map((block) => (
+                <li
+                  key={block.id}
+                  className="p-2 border rounded flex justify-between items-center"
+                >
+                  <span>{block.user_id}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </DialogContent>
     </Dialog>
