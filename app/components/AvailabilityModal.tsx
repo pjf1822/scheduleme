@@ -9,23 +9,27 @@ import {
 import { TeamMember, TeamSchedule } from "@/lib/types/dbexports";
 import { assignTeamScheduleBlockAction } from "../actions/assignTeamScheduleBlock";
 import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";
+import AssignedMembersModalList from "./AssignedMembersModalList";
+import { removeTeamScheduleBlockAction } from "../actions/removeTeamScheduleBlockAction";
 
 type Props = {
   selectedDate: string | null;
   availableMembers: TeamMember[];
-  blocksForSelectedDate: TeamSchedule[];
+  assignedMembers: TeamSchedule[];
   onClose: () => void;
   teamId: string;
   onAssign: (newBlock: TeamSchedule) => void;
+  onRemove: (blockId: string) => void;
 };
 
 const AvailabilityModal = ({
   selectedDate,
   availableMembers,
-  blocksForSelectedDate,
+  assignedMembers,
   onClose,
   teamId,
   onAssign,
+  onRemove,
 }: Props) => {
   const handleAssign = async (member: TeamMember) => {
     if (!selectedDate) return;
@@ -40,6 +44,11 @@ const AvailabilityModal = ({
     onAssign(newBlock);
     onClose();
   };
+  const handleRemove = async (block: TeamSchedule) => {
+    await removeTeamScheduleBlockAction(block.id);
+
+    onRemove(block.id);
+  };
 
   return (
     <Dialog open={!!selectedDate} onOpenChange={onClose}>
@@ -49,7 +58,7 @@ const AvailabilityModal = ({
         </DialogHeader>
 
         {availableMembers.length === 0 ? (
-          <p>No members available on this date</p>
+          <p>No members more available on this date</p>
         ) : (
           <ul className="space-y-2">
             {availableMembers.map((member) => (
@@ -68,22 +77,10 @@ const AvailabilityModal = ({
             ))}
           </ul>
         )}
-        {blocksForSelectedDate.length > 0 && (
-          <div className="mb-4">
-            <h3 className="font-semibold mb-2">Assigned</h3>
-
-            <ul className="space-y-2">
-              {blocksForSelectedDate.map((block) => (
-                <li
-                  key={block.id}
-                  className="p-2 border rounded flex justify-between items-center"
-                >
-                  <span>{block.user_id}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <AssignedMembersModalList
+          assignedMembers={assignedMembers}
+          onRemove={handleRemove}
+        />
       </DialogContent>
     </Dialog>
   );

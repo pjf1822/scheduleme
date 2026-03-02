@@ -1,6 +1,5 @@
 import {
-  getTeamMemberByUserId,
-  getTeamMembersByTeamId,
+  getTeamContextForUser,
   getTeamScheduleByTeamId,
 } from "../db/teamMembers";
 import { createClient } from "../supabase/server";
@@ -15,13 +14,11 @@ export async function getAdminTeamData() {
 
   if (!user) throw new Error("Not authenticated");
 
-  const adminMember = await getTeamMemberByUserId(user.id);
+  const { adminMember, teamMembers, teamUserIds } = await getTeamContextForUser(
+    user.id,
+  );
 
-  const teamMembers = await getTeamMembersByTeamId(adminMember.team_id);
-
-  const userIds = teamMembers.map((m) => m.user_id);
-
-  const busyBlocks = await getBusyBlocksByUserIds(userIds);
+  const busyBlocks = await getBusyBlocksByUserIds(teamUserIds);
   const scheduleBlocks = await getTeamScheduleByTeamId(adminMember.team_id);
 
   return {

@@ -22,3 +22,9 @@ export async function assignTeamMemberToDate(
     created_by: user.id,
   });
 }
+
+import { deleteTeamScheduleBlock } from "@/lib/db/teamSchedule";
+
+export async function removeTeamScheduleBlock(blockId: string) {
+  return deleteTeamScheduleBlock(blockId);
+}

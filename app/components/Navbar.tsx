@@ -6,7 +6,7 @@ const Navbar = ({
   email,
 }: {
   userRole: string | null;
-  email: string | null;
+  email: string;
 }) => {
   return (
     <div>

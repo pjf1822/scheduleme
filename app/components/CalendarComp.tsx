@@ -32,6 +32,7 @@ const CalendarComp = ({ busyBlocks }: Props) => {
       }
 
       const block = createBlockFromDate(dateKey);
+
       await addBusyBlockAction(block);
     } catch (err) {
       console.error("Toggle failed", err);

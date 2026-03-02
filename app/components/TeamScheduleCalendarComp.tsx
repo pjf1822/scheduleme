@@ -10,6 +10,7 @@ import { getAvailableMembersForDate } from "@/lib/utils/calendar/getAvailableMem
 import { getBusyBlocksByMember } from "@/lib/utils/calendar/getBusyBlocksByMember";
 import { getEventsFromScheduleBlocks } from "@/lib/utils/calendar/getEventsFromScheduleBlocks";
 import { getScheduleBlocksForDate } from "@/lib/utils/calendar/getScheduleBlocksForDate";
+import { getAssignableMembersForDate } from "@/lib/utils/calendar/getAssignableMembersForDate";
 type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
@@ -34,20 +35,20 @@ const TeamScheduleCalendarComp = ({
     setSelectedDate(info.dateStr);
   };
 
-  const blocksForSelectedDate = getScheduleBlocksForDate(
+  const assignedMembers = getScheduleBlocksForDate(
     selectedDate,
     scheduleBlocks,
   );
-  const assignedUserIds = new Set(blocksForSelectedDate.map((b) => b.user_id));
-  const availableMembers = selectedDate
-    ? getAvailableMembersForDate(selectedDate, teamMembers, busyBlocks).filter(
-        (member) => !assignedUserIds.has(member.user_id),
-      )
-    : [];
+  const availableMembers = getAssignableMembersForDate(
+    selectedDate,
+    teamMembers,
+    busyBlocks,
+    assignedMembers,
+  );
 
   return (
     <div>
-      <h2>Teacm Schedule</h2>
+      <h2>Team Schedule</h2>
 
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -84,12 +85,15 @@ const TeamScheduleCalendarComp = ({
       <AvailabilityModal
         selectedDate={selectedDate}
         availableMembers={availableMembers}
-        blocksForSelectedDate={blocksForSelectedDate}
+        assignedMembers={assignedMembers}
         onClose={() => setSelectedDate(null)}
         teamId={teamId}
         onAssign={(newBlock) =>
           setScheduleBlocks((prev) => [...prev, newBlock])
         }
+        onRemove={(blockId) => {
+          setScheduleBlocks((prev) => prev.filter((b) => b.id !== blockId));
+        }}
       />
     </div>
   );

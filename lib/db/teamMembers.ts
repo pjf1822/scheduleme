@@ -12,29 +12,32 @@ export async function getTeamScheduleByTeamId(teamId: string) {
 
   return data;
 }
-export async function getTeamMemberByUserId(userId: string) {
+
+export async function getTeamContextForUser(userId: string) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  // 1️⃣ find user's team
+  const { data: membership, error: memberError } = await supabase
     .from("team_members")
     .select("*")
     .eq("user_id", userId)
     .single();
 
-  if (error) throw error;
+  if (memberError) throw memberError;
 
-  return data;
-}
-
-export async function getTeamMembersByTeamId(teamId: string) {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
+  // 2️⃣ fetch entire team
+  const { data: teamMembers, error: teamError } = await supabase
     .from("team_members")
     .select("*")
-    .eq("team_id", teamId);
+    .eq("team_id", membership.team_id);
 
-  if (error) throw error;
+  if (teamError) throw teamError;
 
-  return data;
+  const teamUserIds = teamMembers.map((m) => m.user_id);
+
+  return {
+    adminMember: membership,
+    teamMembers,
+    teamUserIds: teamUserIds,
+  };
 }

@@ -13,6 +13,7 @@ const page = async () => {
   if (userRole === "admin") {
     const { busyBlocks, teamMembers, teamId, scheduleBlocks } =
       await getAdminTeamData();
+
     return (
       <div>
         <h1>Dashboard</h1>

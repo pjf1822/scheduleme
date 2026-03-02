@@ -18,8 +18,8 @@ export async function getCurrentUserBusyBlocks() {
 }
 
 export async function addBusyBlock(params: {
-  start_time: Date;
-  end_time: Date;
+  start_time: string;
+  end_time: string;
 }) {
   const supabase = await createClient();
 
@@ -31,14 +31,17 @@ export async function addBusyBlock(params: {
     throw new Error("Not authenticated");
   }
 
-  if (params.end_time <= params.start_time) {
+  const startTime = new Date(params.start_time);
+  const endTime = new Date(params.end_time);
+
+  if (endTime <= startTime) {
     throw new Error("End time must be after start time");
   }
 
   return insertBusyBlock({
     userId: user.id,
-    startTime: params.start_time.toISOString(),
-    endTime: params.end_time.toISOString(),
+    startTime: startTime.toISOString(),
+    endTime: endTime.toISOString(),
   });
 }
 
@@ -56,6 +59,7 @@ export async function removeBusyBlock(id: string) {
   return deleteBusyBlock(id);
 }
 
+//FOR ADMIN
 export async function getBusyBlocksByUserIds(userIds: string[]) {
   const supabase = await createClient();
 

@@ -19,3 +19,14 @@ export async function insertTeamScheduleBlock(block: {
 
   return data;
 }
+
+export async function deleteTeamScheduleBlock(blockId: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("team_schedule")
+    .delete()
+    .eq("id", blockId);
+
+  if (error) throw error;
+}
