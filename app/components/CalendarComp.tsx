@@ -4,10 +4,10 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { addBusyBlockAction } from "../actions/addBusyBlock";
 import { getBusyDateMap } from "@/lib/utils/dates/getBusyDateMap";
-import { createBusyBlockFromDate } from "@/lib/utils/calendar/createBusyBlockFromDate";
 import { removeBusyBlockAction } from "../actions/removeBusyBlock";
 import { useRef } from "react";
 import { BusyBlock } from "@/lib/types/dbexports";
+import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";
 
 type Props = {
   busyBlocks: BusyBlock[];
@@ -31,7 +31,7 @@ const CalendarComp = ({ busyBlocks }: Props) => {
         return;
       }
 
-      const block = createBusyBlockFromDate(dateKey);
+      const block = createBlockFromDate(dateKey);
       await addBusyBlockAction(block);
     } catch (err) {
       console.error("Toggle failed", err);
