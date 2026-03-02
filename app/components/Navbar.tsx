@@ -1,10 +1,17 @@
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 
-const Navbar = ({ userRole }: { userRole: string | null }) => {
+const Navbar = ({
+  userRole,
+  email,
+}: {
+  userRole: string | null;
+  email: string;
+}) => {
   return (
     <div>
       {userRole === "admin" && <Link href="/admin">Admin</Link>}
+      {email}
       <Link href="dashboard">home</Link>
       <LogoutButton />
     </div>

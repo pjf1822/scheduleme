@@ -4,8 +4,8 @@ import { addBusyBlock } from "@/lib/services/busyBlocks";
 import { revalidatePath } from "next/cache";
 
 export async function addBusyBlockAction(params: {
-  startTime: Date;
-  endTime: Date;
+  start_time: string;
+  end_time: string;
 }) {
   await addBusyBlock(params);
 

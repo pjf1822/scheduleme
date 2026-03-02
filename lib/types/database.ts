@@ -56,6 +56,94 @@ export type Database = {
         };
         Relationships: [];
       };
+      team_members: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          member_role: Database["public"]["Enums"]["team_role"];
+          team_id: string | null;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          member_role?: Database["public"]["Enums"]["team_role"];
+          team_id?: string | null;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          member_role?: Database["public"]["Enums"]["team_role"];
+          team_id?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_members_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_schedule: {
+        Row: {
+          created_at: string | null;
+          created_by: string | null;
+          end_time: string;
+          id: string;
+          start_time: string;
+          team_id: string | null;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          created_by?: string | null;
+          end_time: string;
+          id?: string;
+          start_time: string;
+          team_id?: string | null;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          created_by?: string | null;
+          end_time?: string;
+          id?: string;
+          start_time?: string;
+          team_id?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_schedule_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      teams: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
           id: number;
@@ -90,6 +178,7 @@ export type Database = {
     Enums: {
       app_permission: "channels.delete" | "messages.delete";
       app_role: "admin" | "user";
+      team_role: "admin" | "user";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -222,6 +311,7 @@ export const Constants = {
     Enums: {
       app_permission: ["channels.delete", "messages.delete"],
       app_role: ["admin", "user"],
+      team_role: ["admin", "user"],
     },
   },
 } as const;

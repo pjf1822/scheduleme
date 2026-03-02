@@ -34,7 +34,9 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {user && <Navbar userRole={user.user_role} />}
+        {user?.email && user?.user_role && (
+          <Navbar userRole={user.user_role} email={user.email} />
+        )}
         {children}
       </body>
     </html>
