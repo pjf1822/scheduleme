@@ -3,6 +3,7 @@ import CalendarComp from "../components/CalendarComp";
 import { createClient } from "@/lib/supabase/server";
 import { getAdminTeamData } from "@/lib/services/admin";
 import TeamScheduleCalendarComp from "../components/TeamScheduleCalendarComp";
+import { fetchTeamRoles } from "@/lib/services/teamRoles";
 
 const page = async () => {
   const supabase = await createClient();
@@ -14,6 +15,7 @@ const page = async () => {
     const { busyBlocks, teamMembers, teamId, scheduleBlocks } =
       await getAdminTeamData();
 
+    const roles = await fetchTeamRoles(teamId);
     return (
       <div>
         <h1>Dashboard</h1>
@@ -22,6 +24,7 @@ const page = async () => {
           teamMembers={teamMembers}
           teamId={teamId}
           initialScheduleBlocks={scheduleBlocks}
+          roles={roles}
         />
       </div>
     );

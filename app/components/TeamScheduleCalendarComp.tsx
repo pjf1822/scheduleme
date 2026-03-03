@@ -3,19 +3,25 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { BusyBlock, TeamMember, TeamSchedule } from "@/lib/types/dbexports";
+import {
+  BusyBlock,
+  TeamMember,
+  TeamRoles,
+  TeamSchedule,
+} from "@/lib/types/dbexports";
 import { useState } from "react";
 import AvailabilityModal from "./AvailabilityModal";
-import { getAvailableMembersForDate } from "@/lib/utils/calendar/getAvailableMembersForDate";
 import { getBusyBlocksByMember } from "@/lib/utils/calendar/getBusyBlocksByMember";
 import { getEventsFromScheduleBlocks } from "@/lib/utils/calendar/getEventsFromScheduleBlocks";
 import { getScheduleBlocksForDate } from "@/lib/utils/calendar/getScheduleBlocksForDate";
 import { getAssignableMembersForDate } from "@/lib/utils/calendar/getAssignableMembersForDate";
+import { getRoleSlotsAction } from "../actions/roleSlots/roleSlotActions";
 type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
   teamId: string;
   initialScheduleBlocks: TeamSchedule[];
+  roles: TeamRoles[];
 };
 
 const TeamScheduleCalendarComp = ({
@@ -23,6 +29,7 @@ const TeamScheduleCalendarComp = ({
   teamMembers,
   teamId,
   initialScheduleBlocks,
+  roles,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [scheduleBlocks, setScheduleBlocks] = useState<TeamSchedule[]>(
@@ -31,7 +38,7 @@ const TeamScheduleCalendarComp = ({
   const busyBlocksByMember = getBusyBlocksByMember(teamMembers, busyBlocks);
   const events = getEventsFromScheduleBlocks(scheduleBlocks);
 
-  const handleDateClick = (info: any) => {
+  const handleDateClick = async (info: any) => {
     setSelectedDate(info.dateStr);
   };
 

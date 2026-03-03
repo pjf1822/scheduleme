@@ -18,6 +18,7 @@ const CalendarComp = ({ busyBlocks }: Props) => {
   const busyDateMap = getBusyDateMap(busyBlocks);
 
   const handleDateClick = async (info: any) => {
+    console.log(info, "the info");
     const dateKey = info.dateStr;
 
     if (pendingDates.current.has(dateKey)) {

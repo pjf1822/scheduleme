@@ -6,10 +6,10 @@ import { revalidatePath } from "next/cache";
 export async function createRoleSlotAction(
   teamId: string,
   roleId: string,
-  start: string,
-  end: string,
+  start_time: string,
+  end_time: string,
 ) {
-  await createRoleSlot(teamId, roleId, start, end);
+  await createRoleSlot(teamId, roleId, start_time, end_time);
 
   revalidatePath("/dashboard");
 }

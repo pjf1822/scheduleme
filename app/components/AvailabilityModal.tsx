@@ -6,11 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TeamMember, TeamSchedule } from "@/lib/types/dbexports";
+import { TeamMember, TeamRoles, TeamSchedule } from "@/lib/types/dbexports";
 import { assignTeamScheduleBlockAction } from "../actions/teamSchedule/assignTeamScheduleBlock";
 import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";
 import AssignedMembersModalList from "./AssignedMembersModalList";
 import { removeTeamScheduleBlockAction } from "../actions/teamSchedule/removeTeamScheduleBlockAction";
+import RoleAssignment from "./RoleAssignment";
 
 type Props = {
   selectedDate: string | null;
@@ -20,6 +21,7 @@ type Props = {
   teamId: string;
   onAssign: (newBlock: TeamSchedule) => void;
   onRemove: (blockId: string) => void;
+  // roles: TeamRoles[];
 };
 
 const AvailabilityModal = ({
@@ -81,6 +83,7 @@ const AvailabilityModal = ({
           assignedMembers={assignedMembers}
           onRemove={handleRemove}
         />
+        <RoleAssignment selectedDate={selectedDate} teamId={teamId} />
       </DialogContent>
     </Dialog>
   );
