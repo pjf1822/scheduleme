@@ -2,9 +2,9 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { addBusyBlockAction } from "../actions/addBusyBlock";
+import { addBusyBlockAction } from "../actions/busyBlocks/addBusyBlock";
 import { getBusyDateMap } from "@/lib/utils/dates/getBusyDateMap";
-import { removeBusyBlockAction } from "../actions/removeBusyBlock";
+import { removeBusyBlockAction } from "../actions/busyBlocks/removeBusyBlock";
 import { useRef } from "react";
 import { BusyBlock } from "@/lib/types/dbexports";
 import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";

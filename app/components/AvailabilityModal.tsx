@@ -7,10 +7,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TeamMember, TeamSchedule } from "@/lib/types/dbexports";
-import { assignTeamScheduleBlockAction } from "../actions/assignTeamScheduleBlock";
+import { assignTeamScheduleBlockAction } from "../actions/teamSchedule/assignTeamScheduleBlock";
 import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";
 import AssignedMembersModalList from "./AssignedMembersModalList";
-import { removeTeamScheduleBlockAction } from "../actions/removeTeamScheduleBlockAction";
+import { removeTeamScheduleBlockAction } from "../actions/teamSchedule/removeTeamScheduleBlockAction";
 
 type Props = {
   selectedDate: string | null;
