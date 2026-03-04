@@ -24,7 +24,6 @@ export const AddMemberToRole = ({
   const assignedUserIds = new Set(
     roleSlots.map((slot) => slot.assigned_user_id).filter(Boolean),
   );
-
   return (
     <div className="border-t pt-4 space-y-4">
       <h3 className="font-semibold">Assign Members to Roles</h3>
@@ -45,7 +44,14 @@ export const AddMemberToRole = ({
                 className="border px-2 py-1"
               >
                 <option value="">Unassigned</option>
-
+                {slot.assigned_user_id &&
+                  !availableMembers.some(
+                    (m) => m.user_id === slot.assigned_user_id,
+                  ) && (
+                    <option value={slot.assigned_user_id}>
+                      {slot.assigned_user_id}
+                    </option>
+                  )}
                 {availableMembers
                   .filter(
                     (member) =>

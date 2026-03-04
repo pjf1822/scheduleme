@@ -1,4 +1,8 @@
-import { insertRoleSlot, updateRoleSlotAssignment } from "../db/roleSlots";
+import {
+  getRoleSlotByIdDB,
+  insertRoleSlot,
+  updateRoleSlotAssignment,
+} from "../db/roleSlots";
 
 import { getRoleSlotsForDate } from "@/lib/db/roleSlots";
 
@@ -8,6 +12,9 @@ export async function fetchRoleSlots(
   end_time: string,
 ) {
   return getRoleSlotsForDate(teamId, start_time, end_time);
+}
+export async function getRoleSlotById(slotId: string) {
+  return getRoleSlotByIdDB(slotId);
 }
 export async function createRoleSlot(
   teamId: string,

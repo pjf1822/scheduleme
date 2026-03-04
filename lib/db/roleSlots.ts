@@ -1,5 +1,18 @@
 import { createClient } from "@/lib/supabase/server";
 
+export async function getRoleSlotByIdDB(slotId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("event_role_slots")
+    .select("*")
+    .eq("id", slotId)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
 export async function getRoleSlotsForDate(
   teamId: string,
   start_time: string,

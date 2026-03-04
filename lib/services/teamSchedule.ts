@@ -6,6 +6,7 @@ export async function assignTeamMemberToDate(
   teamId: string,
   start_time: string,
   end_time: string,
+  role_id: string,
 ) {
   const supabase = await createClient();
   const {
@@ -19,12 +20,20 @@ export async function assignTeamMemberToDate(
     team_id: teamId,
     start_time,
     end_time,
+
     created_by: user.id,
+    role_id,
   });
 }
 
 import { deleteTeamScheduleBlock } from "@/lib/db/teamSchedule";
 
-export async function removeTeamScheduleBlock(blockId: string) {
-  return deleteTeamScheduleBlock(blockId);
+export async function removeTeamScheduleBlock(
+  userId: string,
+  teamId: string,
+  start_time: string,
+  end_time: string,
+  role_id: string,
+) {
+  return deleteTeamScheduleBlock(userId, teamId, start_time, end_time, role_id);
 }

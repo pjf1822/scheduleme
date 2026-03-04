@@ -6,6 +6,7 @@ export async function insertTeamScheduleBlock(block: {
   start_time: string;
   end_time: string;
   created_by: string;
+  role_id: string;
 }) {
   const supabase = await createClient();
 
@@ -20,13 +21,23 @@ export async function insertTeamScheduleBlock(block: {
   return data;
 }
 
-export async function deleteTeamScheduleBlock(blockId: string) {
+export async function deleteTeamScheduleBlock(
+  userId: string,
+  teamId: string,
+  start_time: string,
+  end_time: string,
+  role_id: string,
+) {
   const supabase = await createClient();
 
   const { error } = await supabase
     .from("team_schedule")
     .delete()
-    .eq("id", blockId);
+    .eq("user_id", userId)
+    .eq("team_id", teamId)
+    .eq("start_time", start_time)
+    .eq("end_time", end_time)
+    .eq("role_id", role_id);
 
   if (error) throw error;
 }

@@ -44,24 +44,24 @@ const AvailabilityModal = ({
   roleSlots,
   setRoleSlots,
 }: Props) => {
-  const handleAssign = async (member: TeamMember) => {
-    if (!selectedDate) return;
-    const { start_time, end_time } = createBlockFromDate(selectedDate);
+  // const handleAssign = async (member: TeamMember) => {
+  //   if (!selectedDate) return;
+  //   const { start_time, end_time } = createBlockFromDate(selectedDate);
 
-    const newBlock = await assignTeamScheduleBlockAction(
-      member.user_id,
-      teamId,
-      start_time,
-      end_time,
-    );
-    onAssign(newBlock);
-    onClose();
-  };
-  const handleRemove = async (block: TeamSchedule) => {
-    await removeTeamScheduleBlockAction(block.id);
+  //   const newBlock = await assignTeamScheduleBlockAction(
+  //     member.user_id,
+  //     teamId,
+  //     start_time,
+  //     end_time,
+  //   );
+  //   onAssign(newBlock);
+  //   onClose();
+  // };
+  // const handleRemove = async (block: TeamSchedule) => {
+  //   await removeTeamScheduleBlockAction(block.id);
 
-    onRemove(block.id);
-  };
+  //   onRemove(block.id);
+  // };
 
   return (
     <Dialog open={!!selectedDate} onOpenChange={onClose}>
@@ -79,20 +79,20 @@ const AvailabilityModal = ({
                 className="p-2 border rounded flex justify-between items-center"
               >
                 <span>{member.user_id}</span>
-                <button
+                {/* <button
                   className="text-sm border rounded px-2 py-1"
                   onClick={() => handleAssign(member)}
                 >
                   Assign
-                </button>
+                </button> */}
               </li>
             ))}
           </ul>
         )}
-        <AssignedMembersModalList
+        {/* <AssignedMembersModalList
           assignedMembers={assignedMembers}
           onRemove={handleRemove}
-        />
+        /> */}
         <RoleAssignment
           selectedDate={selectedDate}
           teamId={teamId}
