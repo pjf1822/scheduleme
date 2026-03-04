@@ -1,9 +1,7 @@
-import {
-  getTeamContextForUser,
-  getTeamScheduleByTeamId,
-} from "../db/teamMembers";
+import { getTeamContextForUser } from "../db/teamMembers";
 import { createClient } from "../supabase/server";
 import { getBusyBlocksByUserIds } from "./busyBlocks";
+import { getShiftsByTeamId } from "./shifts";
 
 export async function getAdminTeamData() {
   const supabase = await createClient();
@@ -19,12 +17,12 @@ export async function getAdminTeamData() {
   );
 
   const busyBlocks = await getBusyBlocksByUserIds(teamUserIds);
-  const scheduleBlocks = await getTeamScheduleByTeamId(adminMember.team_id);
+  const shifts = await getShiftsByTeamId(adminMember.team_id);
 
   return {
     teamMembers,
     busyBlocks,
     teamId: adminMember.team_id,
-    scheduleBlocks,
+    shifts,
   };
 }

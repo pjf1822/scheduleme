@@ -12,7 +12,7 @@ const page = async () => {
   const userRole = data?.claims?.user_role;
 
   if (userRole === "admin") {
-    const { busyBlocks, teamMembers, teamId, scheduleBlocks } =
+    const { busyBlocks, teamMembers, teamId, shifts } =
       await getAdminTeamData();
 
     const roles = await fetchTeamRoles(teamId);
@@ -24,7 +24,7 @@ const page = async () => {
           busyBlocks={busyBlocks}
           teamMembers={teamMembers}
           teamId={teamId}
-          initialScheduleBlocks={scheduleBlocks}
+          shifts={shifts}
           roles={roles}
         />
       </div>

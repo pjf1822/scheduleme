@@ -1,14 +1,20 @@
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import { useState } from "react";
-import { createRoleSlotAction } from "../actions/roleSlots/roleSlotActions";
-import { TeamRoles } from "@/lib/types/dbexports";
+import { Shifts, TeamRoles } from "@/lib/types/dbexports";
+import { createShiftAction } from "../actions/shifts/shiftActions";
 
 type Props = {
   selectedDate: string | null;
   teamId: string;
   roles: TeamRoles[];
+  onShiftCreated: (newShifts: Shifts[]) => void;
 };
-const RoleAssignment = ({ selectedDate, teamId, roles }: Props) => {
+const RoleAssignment = ({
+  selectedDate,
+  teamId,
+  roles,
+  onShiftCreated,
+}: Props) => {
   const [selectedRoleId, setSelectedRoleId] = useState("");
 
   const [quantity, setQuantity] = useState(1);
@@ -18,14 +24,18 @@ const RoleAssignment = ({ selectedDate, teamId, roles }: Props) => {
     try {
       const { start_time, end_time } = createBlockFromDate(selectedDate);
 
+      const newShifts: Shifts[] = [];
+
       for (let i = 0; i < quantity; i++) {
-        await createRoleSlotAction(
+        const shift = await createShiftAction(
           teamId,
           selectedRoleId,
           start_time,
           end_time,
         );
+        newShifts.push(shift);
       }
+      onShiftCreated(newShifts);
 
       setSelectedRoleId("");
       setQuantity(1);

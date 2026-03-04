@@ -7,6 +7,5 @@ export type BusyBlockInsert =
 
 export type TeamMember = Database["public"]["Tables"]["team_members"]["Row"];
 
-export type TeamSchedule = Database["public"]["Tables"]["team_schedule"]["Row"];
 export type TeamRoles = Database["public"]["Tables"]["team_roles"]["Row"];
-export type RoleSlots = Database["public"]["Tables"]["event_role_slots"]["Row"];
+export type Shifts = Database["public"]["Tables"]["shifts"]["Row"];

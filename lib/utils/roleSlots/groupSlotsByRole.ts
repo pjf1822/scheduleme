@@ -1,23 +1,23 @@
-import { TeamRoles, RoleSlots } from "@/lib/types/dbexports";
+import { TeamRoles, Shifts } from "@/lib/types/dbexports";
 
-export function groupSlotsByRole(
-  roleSlots: RoleSlots[],
+export function groupShiftsByRole(
+  shifts: Shifts[],
   roles: TeamRoles[],
-): Map<string, RoleSlots[]> {
-  const map = new Map<string, RoleSlots[]>();
+): Map<string, Shifts[]> {
+  const map = new Map<string, Shifts[]>();
 
-  roleSlots.forEach((slot) => {
-    const role = roles.find((r) => r.id === slot.role_id);
+  shifts.forEach((shift) => {
+    const role = roles.find((r) => r.id === shift.role_id);
     if (!role) return;
 
-    let slots = map.get(role.name);
+    let shifts = map.get(role.name);
 
-    if (!slots) {
-      slots = [];
-      map.set(role.name, slots);
+    if (!shifts) {
+      shifts = [];
+      map.set(role.name, shifts);
     }
 
-    slots.push(slot);
+    shifts.push(shift);
   });
 
   return map;
