@@ -13,12 +13,16 @@ export async function getTeamRoles(teamId: string) {
   return data;
 }
 
-export async function insertTeamRole(teamId: string, name: string) {
+export async function insertTeamRole(
+  teamId: string,
+  name: string,
+  newColor: string,
+) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("team_roles")
-    .insert({ team_id: teamId, name })
+    .insert({ team_id: teamId, name, color: newColor })
     .select()
     .single();
 
@@ -26,12 +30,16 @@ export async function insertTeamRole(teamId: string, name: string) {
   return data;
 }
 
-export async function updateTeamRole(roleId: string, name: string) {
+export async function updateTeamRole(
+  roleId: string,
+  name: string,
+  editColor: string,
+) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("team_roles")
-    .update({ name })
+    .update({ id: roleId, name, color: editColor })
     .eq("id", roleId)
     .select()
     .single();

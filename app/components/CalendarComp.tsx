@@ -2,12 +2,12 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { addBusyBlockAction } from "../actions/addBusyBlock";
+import { addBusyBlockAction } from "../actions/busyBlocks/addBusyBlock";
 import { getBusyDateMap } from "@/lib/utils/dates/getBusyDateMap";
-import { removeBusyBlockAction } from "../actions/removeBusyBlock";
+import { removeBusyBlockAction } from "../actions/busyBlocks/removeBusyBlock";
 import { useRef } from "react";
 import { BusyBlock } from "@/lib/types/dbexports";
-import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";
+import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 
 type Props = {
   busyBlocks: BusyBlock[];
@@ -49,7 +49,7 @@ const CalendarComp = ({ busyBlocks }: Props) => {
       showNonCurrentDates={false}
       height="auto"
       dayCellClassNames={(arg) => {
-        const dateString = arg.date.toISOString().split("T")[0];
+        const dateString = arg.date.toLocaleDateString("en-CA");
 
         if (busyDateMap.has(dateString)) {
           return ["busy-day"];

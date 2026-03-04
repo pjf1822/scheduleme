@@ -7,13 +7,21 @@ import {
 } from "@/lib/services/teamRoles";
 import { revalidatePath } from "next/cache";
 
-export async function createTeamRoleAction(teamId: string, name: string) {
-  await createTeamRole(teamId, name);
+export async function createTeamRoleAction(
+  teamId: string,
+  name: string,
+  newColor: string,
+) {
+  await createTeamRole(teamId, name, newColor);
   revalidatePath("/settings");
 }
 
-export async function updateTeamRoleAction(roleId: string, name: string) {
-  await renameTeamRole(roleId, name);
+export async function updateTeamRoleAction(
+  roleId: string,
+  name: string,
+  editColor: string,
+) {
+  await renameTeamRole(roleId, name, editColor);
   revalidatePath("/settings");
 }
 

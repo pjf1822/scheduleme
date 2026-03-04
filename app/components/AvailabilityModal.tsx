@@ -6,11 +6,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TeamMember, TeamSchedule } from "@/lib/types/dbexports";
-import { assignTeamScheduleBlockAction } from "../actions/assignTeamScheduleBlock";
-import { createBlockFromDate } from "@/lib/utils/calendar/createBlockFromData";
+import {
+  RoleSlots,
+  TeamMember,
+  TeamRoles,
+  TeamSchedule,
+} from "@/lib/types/dbexports";
+import { assignTeamScheduleBlockAction } from "../actions/teamSchedule/assignTeamScheduleBlock";
+import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import AssignedMembersModalList from "./AssignedMembersModalList";
-import { removeTeamScheduleBlockAction } from "../actions/removeTeamScheduleBlockAction";
+import { removeTeamScheduleBlockAction } from "../actions/teamSchedule/removeTeamScheduleBlockAction";
+import RoleAssignment from "./RoleAssignment";
+import { AddMemberToRole } from "./AddMemberToRole";
 
 type Props = {
   selectedDate: string | null;
@@ -20,6 +27,9 @@ type Props = {
   teamId: string;
   onAssign: (newBlock: TeamSchedule) => void;
   onRemove: (blockId: string) => void;
+  roles: TeamRoles[];
+  roleSlots: any[];
+  setRoleSlots: React.Dispatch<React.SetStateAction<RoleSlots[]>>;
 };
 
 const AvailabilityModal = ({
@@ -30,25 +40,28 @@ const AvailabilityModal = ({
   teamId,
   onAssign,
   onRemove,
+  roles,
+  roleSlots,
+  setRoleSlots,
 }: Props) => {
-  const handleAssign = async (member: TeamMember) => {
-    if (!selectedDate) return;
-    const { start_time, end_time } = createBlockFromDate(selectedDate);
+  // const handleAssign = async (member: TeamMember) => {
+  //   if (!selectedDate) return;
+  //   const { start_time, end_time } = createBlockFromDate(selectedDate);
 
-    const newBlock = await assignTeamScheduleBlockAction(
-      member.user_id,
-      teamId,
-      start_time,
-      end_time,
-    );
-    onAssign(newBlock);
-    onClose();
-  };
-  const handleRemove = async (block: TeamSchedule) => {
-    await removeTeamScheduleBlockAction(block.id);
+  //   const newBlock = await assignTeamScheduleBlockAction(
+  //     member.user_id,
+  //     teamId,
+  //     start_time,
+  //     end_time,
+  //   );
+  //   onAssign(newBlock);
+  //   onClose();
+  // };
+  // const handleRemove = async (block: TeamSchedule) => {
+  //   await removeTeamScheduleBlockAction(block.id);
 
-    onRemove(block.id);
-  };
+  //   onRemove(block.id);
+  // };
 
   return (
     <Dialog open={!!selectedDate} onOpenChange={onClose}>
@@ -56,7 +69,6 @@ const AvailabilityModal = ({
         <DialogHeader>
           <DialogTitle>Available on {selectedDate}</DialogTitle>
         </DialogHeader>
-
         {availableMembers.length === 0 ? (
           <p>No members more available on this date</p>
         ) : (
@@ -67,19 +79,38 @@ const AvailabilityModal = ({
                 className="p-2 border rounded flex justify-between items-center"
               >
                 <span>{member.user_id}</span>
-                <button
+                {/* <button
                   className="text-sm border rounded px-2 py-1"
                   onClick={() => handleAssign(member)}
                 >
                   Assign
-                </button>
+                </button> */}
               </li>
             ))}
           </ul>
         )}
-        <AssignedMembersModalList
+        {/* <AssignedMembersModalList
           assignedMembers={assignedMembers}
           onRemove={handleRemove}
+        /> */}
+        <RoleAssignment
+          selectedDate={selectedDate}
+          teamId={teamId}
+          roles={roles}
+        />
+        <AddMemberToRole
+          roleSlots={roleSlots}
+          roles={roles}
+          availableMembers={availableMembers}
+          onAssigned={(slotId, userId) => {
+            setRoleSlots((prev) =>
+              prev.map((slot) =>
+                slot.id === slotId
+                  ? { ...slot, assigned_user_id: userId || null }
+                  : slot,
+              ),
+            );
+          }}
         />
       </DialogContent>
     </Dialog>

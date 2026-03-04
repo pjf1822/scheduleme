@@ -38,6 +38,41 @@ export type Database = {
         };
         Relationships: [];
       };
+      event_role_slots: {
+        Row: {
+          assigned_user_id: string | null;
+          created_at: string | null;
+          event_date: string;
+          id: string;
+          role_id: string;
+          team_id: string;
+        };
+        Insert: {
+          assigned_user_id?: string | null;
+          created_at?: string | null;
+          event_date: string;
+          id?: string;
+          role_id: string;
+          team_id: string;
+        };
+        Update: {
+          assigned_user_id?: string | null;
+          created_at?: string | null;
+          event_date?: string;
+          id?: string;
+          role_id?: string;
+          team_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "event_role_slots_role_id_fkey";
+            columns: ["role_id"];
+            isOneToOne: false;
+            referencedRelation: "team_roles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       role_permissions: {
         Row: {
           id: number;
@@ -81,6 +116,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "team_members_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_roles: {
+        Row: {
+          color: string | null;
+          created_at: string | null;
+          id: string;
+          name: string;
+          sort_order: number | null;
+          team_id: string;
+        };
+        Insert: {
+          color?: string | null;
+          created_at?: string | null;
+          id?: string;
+          name: string;
+          sort_order?: number | null;
+          team_id: string;
+        };
+        Update: {
+          color?: string | null;
+          created_at?: string | null;
+          id?: string;
+          name?: string;
+          sort_order?: number | null;
+          team_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fk_team_roles_team";
             columns: ["team_id"];
             isOneToOne: false;
             referencedRelation: "teams";
@@ -174,6 +244,7 @@ export type Database = {
         Returns: boolean;
       };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
+      is_team_member: { Args: { _team_id: string }; Returns: boolean };
     };
     Enums: {
       app_permission: "channels.delete" | "messages.delete";
