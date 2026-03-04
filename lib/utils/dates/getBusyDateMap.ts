@@ -4,8 +4,9 @@ type BusyBlock = {
   end_time: string | Date;
 };
 function toDateKey(date: Date) {
-  return date.toISOString().split("T")[0];
+  return date.toLocaleDateString("en-CA");
 }
+
 export function getBusyDateMap(busyBlocks: BusyBlock[]) {
   const map = new Map<string, string>();
 
@@ -14,7 +15,7 @@ export function getBusyDateMap(busyBlocks: BusyBlock[]) {
     const end = new Date(block.end_time);
 
     const current = new Date(start);
-
+    current.setHours(0, 0, 0, 0);
     while (current <= end) {
       map.set(toDateKey(current), block.id);
       current.setDate(current.getDate() + 1);

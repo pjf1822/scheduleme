@@ -42,13 +42,16 @@ export async function insertRoleSlot(
   return data;
 }
 
-export async function updateRoleSlotAssignment(slotId: string, userId: string) {
+export async function updateRoleSlotAssignment(
+  slotId: string,
+  user_id: string | null,
+) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("event_role_slots")
     .update({
-      assigned_user_id: userId,
+      assigned_user_id: user_id || null,
     })
     .eq("id", slotId)
     .select()

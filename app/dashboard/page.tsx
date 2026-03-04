@@ -16,6 +16,7 @@ const page = async () => {
       await getAdminTeamData();
 
     const roles = await fetchTeamRoles(teamId);
+
     return (
       <div>
         <h1>Dashboard</h1>

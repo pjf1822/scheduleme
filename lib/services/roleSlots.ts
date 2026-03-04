@@ -20,8 +20,6 @@ export async function createRoleSlot(
   return insertRoleSlot(teamId, roleId, start_time, end_time);
 }
 
-export async function assignRoleSlot(slotId: string, userId: string) {
-  if (!userId) throw new Error("User required");
-
-  return updateRoleSlotAssignment(slotId, userId);
+export async function assignRoleSlot(slotId: string, user_id: string | null) {
+  return updateRoleSlotAssignment(slotId, user_id);
 }

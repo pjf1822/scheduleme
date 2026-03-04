@@ -5,16 +5,18 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import {
   BusyBlock,
+  RoleSlots,
   TeamMember,
   TeamRoles,
   TeamSchedule,
 } from "@/lib/types/dbexports";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import AvailabilityModal from "./AvailabilityModal";
 import { getBusyBlocksByMember } from "@/lib/utils/calendar/getBusyBlocksByMember";
 import { getEventsFromScheduleBlocks } from "@/lib/utils/calendar/getEventsFromScheduleBlocks";
 import { getScheduleBlocksForDate } from "@/lib/utils/calendar/getScheduleBlocksForDate";
 import { getAssignableMembersForDate } from "@/lib/utils/calendar/getAssignableMembersForDate";
+import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import { getRoleSlotsAction } from "../actions/roleSlots/roleSlotActions";
 type Props = {
   busyBlocks: BusyBlock[];
@@ -35,10 +37,19 @@ const TeamScheduleCalendarComp = ({
   const [scheduleBlocks, setScheduleBlocks] = useState<TeamSchedule[]>(
     initialScheduleBlocks,
   );
-  const busyBlocksByMember = getBusyBlocksByMember(teamMembers, busyBlocks);
-  const events = getEventsFromScheduleBlocks(scheduleBlocks);
 
+  const [roleSlots, setRoleSlots] = useState<RoleSlots[]>([]);
+  const busyBlocksByMember = getBusyBlocksByMember(teamMembers, busyBlocks);
+  const events = useMemo(
+    () => getEventsFromScheduleBlocks(scheduleBlocks),
+    [scheduleBlocks],
+  );
   const handleDateClick = async (info: any) => {
+    const { start_time, end_time } = createBlockFromDate(info.dateStr);
+    const slots = await getRoleSlotsAction(teamId, start_time, end_time);
+
+    setRoleSlots(slots);
+
     setSelectedDate(info.dateStr);
   };
 
@@ -67,11 +78,11 @@ const TeamScheduleCalendarComp = ({
         events={events}
         eventInteractive={false}
         dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
-        eventClick={(info) => {
-          info.jsEvent.preventDefault();
-          const dateStr = info.event.start?.toISOString().split("T")[0];
-          setSelectedDate(dateStr ?? null);
-        }}
+        // eventClick={(info) => {
+        //   info.jsEvent.preventDefault();
+        //   const dateStr = info.event.start?.toLocaleDateString("en-CA");
+        //   setSelectedDate(dateStr ?? null);
+        // }}
       />
 
       <div>
@@ -82,7 +93,7 @@ const TeamScheduleCalendarComp = ({
             <ul>
               {blocks.map((block) => (
                 <li key={block.id}>
-                  {new Date(block.start_time).toISOString().split("T")[0]}
+                  {new Date(block.start_time).toLocaleDateString("en-CA")}
                 </li>
               ))}
             </ul>
@@ -101,6 +112,9 @@ const TeamScheduleCalendarComp = ({
         onRemove={(blockId) => {
           setScheduleBlocks((prev) => prev.filter((b) => b.id !== blockId));
         }}
+        roles={roles}
+        roleSlots={roleSlots}
+        setRoleSlots={setRoleSlots}
       />
     </div>
   );
