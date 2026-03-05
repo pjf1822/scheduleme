@@ -13,19 +13,7 @@ export async function fetchShiftsByTeamId(teamId: string) {
 
   return data;
 }
-export async function getShiftByIdDB(slotId: string) {
-  const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("shifts")
-    .select("*")
-    .eq("id", slotId)
-    .single();
-
-  if (error) throw error;
-
-  return data;
-}
 // when the admin clicks a date
 export async function fetchShiftsByDate(
   teamId: string,

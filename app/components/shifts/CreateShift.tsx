@@ -1,7 +1,7 @@
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import { useState } from "react";
 import { Shifts, TeamRoles } from "@/lib/types/dbexports";
-import { createShiftAction } from "../actions/shifts/shiftActions";
+import { createShiftAction } from "../../actions/shifts";
 
 type Props = {
   selectedDate: string | null;
@@ -9,14 +9,13 @@ type Props = {
   roles: TeamRoles[];
   onShiftCreated: (newShifts: Shifts[]) => void;
 };
-const RoleAssignment = ({
+const CreateShift = ({
   selectedDate,
   teamId,
   roles,
   onShiftCreated,
 }: Props) => {
   const [selectedRoleId, setSelectedRoleId] = useState("");
-
   const [quantity, setQuantity] = useState(1);
 
   const handleSubmit = async () => {
@@ -24,19 +23,12 @@ const RoleAssignment = ({
     try {
       const { start_time, end_time } = createBlockFromDate(selectedDate);
 
-      const newShifts: Shifts[] = [];
-
-      for (let i = 0; i < quantity; i++) {
-        const shift = await createShiftAction(
-          teamId,
-          selectedRoleId,
-          start_time,
-          end_time,
-        );
-        newShifts.push(shift);
-      }
+      const newShifts = await Promise.all(
+        Array.from({ length: quantity }, () =>
+          createShiftAction(teamId, selectedRoleId, start_time, end_time),
+        ),
+      );
       onShiftCreated(newShifts);
-
       setSelectedRoleId("");
       setQuantity(1);
     } catch (error) {
@@ -83,4 +75,4 @@ const RoleAssignment = ({
   );
 };
 
-export default RoleAssignment;
+export default CreateShift;

@@ -1,8 +1,7 @@
 import { getTeamContextForUser } from "@/lib/db/teamMembers";
-import { fetchTeamRoles } from "@/lib/services/teamRoles";
 import { createClient } from "@/lib/supabase/server";
-import React from "react";
-import TeamRolesManager from "../components/TeamRolesManager";
+import TeamRolesManager from "../components/adminPage/TeamRolesManager";
+import { fetchTeamRoles } from "@/lib/db/teamRoles";
 
 const AdminPage = async () => {
   const supabase = await createClient();

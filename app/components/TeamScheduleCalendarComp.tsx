@@ -11,9 +11,10 @@ import {
 } from "@/lib/types/dbexports";
 import { useMemo, useState } from "react";
 import AvailabilityModal from "./AvailabilityModal";
-import { getBusyBlocksByMember } from "@/lib/utils/calendar/getBusyBlocksByMember";
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
-import { getShiftsByDateAction } from "../actions/shifts/shiftActions";
+import { getShiftsByDateAction } from "../actions/shifts";
+import { convertShiftsForEventCalendar } from "@/lib/utils/calendar/convertShiftsForEventCalendar";
+import { getAvailableMembers } from "@/lib/utils/calendar/getAvailableMembers";
 type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
@@ -30,44 +31,23 @@ const TeamScheduleCalendarComp = ({
   roles,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
   const [shifts, setShifts] = useState<Shifts[]>(initialShifts);
-  const busyBlocksByMember = getBusyBlocksByMember(teamMembers, busyBlocks);
 
-  const events = useMemo(() => {
-    return shifts
-      .filter((shift) => shift.assigned_user_id)
-      .map((shift) => ({
-        title: shift.assigned_user_id as string,
-        start: shift.start_time as string,
-        end: shift.end_time as string,
-      }));
-  }, [shifts]);
+  const events = useMemo(() => convertShiftsForEventCalendar(shifts), [shifts]);
+
+  const availableMembers = getAvailableMembers(
+    teamMembers,
+    shifts,
+    busyBlocks,
+    selectedDate,
+  );
 
   const handleDateClick = async (info: any) => {
     const { start_time, end_time } = createBlockFromDate(info.dateStr);
-    const shifts = await getShiftsByDateAction(teamId, start_time, end_time);
-    setShifts(shifts);
+    const dayShifts = await getShiftsByDateAction(teamId, start_time, end_time);
+    setShifts(dayShifts);
     setSelectedDate(info.dateStr);
   };
-  const handleShiftsCreated = (newShifts: Shifts[]) => {
-    setShifts((prev) => [...prev, ...newShifts]);
-  };
-
-  const assignedUserIds = new Set(
-    shifts.map((shift) => shift.assigned_user_id).filter(Boolean),
-  );
-  const availableMembers = teamMembers.filter(
-    (member) =>
-      !assignedUserIds.has(member.user_id) &&
-      !busyBlocks.some(
-        (block) =>
-          block.user_id === member.user_id &&
-          new Date(block.start_time).toISOString().split("T")[0] ===
-            selectedDate,
-      ),
-  );
-
   return (
     <div>
       <h2>Team Schedule</h2>
@@ -89,21 +69,6 @@ const TeamScheduleCalendarComp = ({
         // }}
       />
 
-      <div>
-        {busyBlocksByMember.map(({ member, blocks }) => (
-          <div key={member.id}>
-            <h3>{member.user_id}</h3>
-
-            <ul>
-              {blocks.map((block) => (
-                <li key={block.id}>
-                  {new Date(block.start_time).toLocaleDateString("en-CA")}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
       <AvailabilityModal
         selectedDate={selectedDate}
         availableMembers={availableMembers}
@@ -111,7 +76,14 @@ const TeamScheduleCalendarComp = ({
         teamId={teamId}
         roles={roles}
         shifts={shifts}
-        onShiftCreated={handleShiftsCreated}
+        onShiftCreated={(newShifts) =>
+          setShifts((prev) => [...prev, ...newShifts])
+        }
+        onShiftAssigned={(updatedShift) =>
+          setShifts((prev) =>
+            prev.map((s) => (s.id === updatedShift.id ? updatedShift : s)),
+          )
+        }
       />
     </div>
   );

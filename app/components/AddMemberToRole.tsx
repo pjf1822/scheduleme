@@ -1,23 +1,30 @@
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
-import { groupShiftsByRole } from "@/lib/utils/roleSlots/groupSlotsByRole";
-import { assignShiftAction } from "../actions/shifts/shiftActions";
+import { assignShiftAction } from "../actions/shifts";
+import { groupShiftsByRole } from "@/lib/utils/shifts/groupShiftsByRole";
 type Props = {
   shifts: Shifts[];
   roles: TeamRoles[];
   availableMembers: TeamMember[];
+  onShiftAssigned: (updatedShift: Shifts) => void;
 };
-export const AddMemberToRole = ({ shifts, roles, availableMembers }: Props) => {
+export const AddMemberToRole = ({
+  shifts,
+  roles,
+  availableMembers,
+  onShiftAssigned,
+}: Props) => {
   const grouped = groupShiftsByRole(shifts, roles);
 
   const handleAssign = async (shiftId: string, user_id: string) => {
     const value = user_id === "" ? null : user_id;
-
-    await assignShiftAction(shiftId, value);
+    const updatedShift = await assignShiftAction(shiftId, value);
+    onShiftAssigned(updatedShift);
   };
 
   const assignedUserIds = new Set(
     shifts.map((shift) => shift.assigned_user_id).filter(Boolean),
   );
+
   return (
     <div className="border-t pt-4 space-y-4">
       <h3 className="font-semibold">Assign Members to Roles</h3>

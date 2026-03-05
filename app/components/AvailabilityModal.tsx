@@ -7,8 +7,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
-import RoleAssignment from "./RoleAssignment";
 import { AddMemberToRole } from "./AddMemberToRole";
+import CreateShift from "./shifts/CreateShift";
 
 type Props = {
   selectedDate: string | null;
@@ -18,6 +18,7 @@ type Props = {
   roles: TeamRoles[];
   shifts: Shifts[];
   onShiftCreated: (newShifts: Shifts[]) => void;
+  onShiftAssigned: (updatedShift: Shifts) => void;
 };
 
 const AvailabilityModal = ({
@@ -28,6 +29,7 @@ const AvailabilityModal = ({
   roles,
   shifts,
   onShiftCreated,
+  onShiftAssigned,
 }: Props) => {
   return (
     <Dialog open={!!selectedDate} onOpenChange={onClose}>
@@ -49,21 +51,21 @@ const AvailabilityModal = ({
             ))}
           </ul>
         )}
-        {/* <AssignedMembersModalList
-          assignedMembers={assignedMembers}
-          onRemove={handleRemove}
-        /> */}
-        <RoleAssignment
+
+        <CreateShift
           selectedDate={selectedDate}
           teamId={teamId}
           roles={roles}
           onShiftCreated={onShiftCreated}
         />
-        <AddMemberToRole
-          shifts={shifts}
-          roles={roles}
-          availableMembers={availableMembers}
-        />
+        {shifts.length > 0 && (
+          <AddMemberToRole
+            shifts={shifts}
+            roles={roles}
+            availableMembers={availableMembers}
+            onShiftAssigned={onShiftAssigned}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

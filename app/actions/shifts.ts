@@ -3,14 +3,8 @@
 import {
   assignShift,
   createShift,
-  getShiftById,
   getShiftsByDate,
 } from "@/lib/services/shifts";
-import {
-  assignTeamMemberToDate,
-  removeTeamScheduleBlock,
-} from "@/lib/services/teamSchedule";
-import { revalidatePath } from "next/cache";
 
 export async function getShiftsByDateAction(
   teamId: string,
@@ -34,7 +28,6 @@ export async function assignShiftAction(
   shiftId: string,
   user_id: string | null,
 ) {
-  await assignShift(shiftId, user_id);
-
-  revalidatePath("/dashboard");
+  const shift = await assignShift(shiftId, user_id);
+  return shift;
 }
