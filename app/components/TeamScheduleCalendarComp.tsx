@@ -38,7 +38,6 @@ const TeamScheduleCalendarComp = ({
     () => convertShiftsForEventCalendar(calendarShifts),
     [calendarShifts],
   );
-  console.log(events);
   const availableMembers = getAvailableMembers(
     teamMembers,
     modalShifts,
@@ -77,11 +76,6 @@ const TeamScheduleCalendarComp = ({
           </div>
         )}
         dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
-        // eventClick={(info) => {
-        //   info.jsEvent.preventDefault();
-        //   const dateStr = info.event.start?.toLocaleDateString("en-CA");
-        //   setSelectedDate(dateStr ?? null);
-        // }}
       />
 
       <AvailabilityModal
