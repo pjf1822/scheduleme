@@ -1,8 +1,8 @@
 import { getCurrentUserBusyBlocks } from "@/lib/services/busyBlocks";
-import CalendarComp from "../components/CalendarComp";
+import CalendarComp from "../components/calendarComps/CalendarComp";
 import { createClient } from "@/lib/supabase/server";
 import { getAdminTeamData } from "@/lib/services/admin";
-import TeamScheduleCalendarComp from "../components/TeamScheduleCalendarComp";
+import TeamScheduleCalendarComp from "../components/calendarComps/TeamScheduleCalendarComp";
 import { getTeamRoles } from "@/lib/services/teamRoles";
 
 const page = async () => {

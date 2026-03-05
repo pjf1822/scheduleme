@@ -74,6 +74,9 @@
   pointer-events: none;
   opacity: 0.6;
 }
+.fc .fc-daygrid-day-number {
+  width: 100% !important;
+}
 
 :root {
   --radius: 0.625rem;

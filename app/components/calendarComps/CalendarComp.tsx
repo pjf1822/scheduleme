@@ -9,7 +9,7 @@ import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import {
   addBusyBlockAction,
   removeBusyBlockAction,
-} from "../actions/busyBlocks";
+} from "../../actions/busyBlocks";
 
 type Props = {
   busyBlocks: BusyBlock[];

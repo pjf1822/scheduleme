@@ -10,11 +10,12 @@ import {
   TeamRoles,
 } from "@/lib/types/dbexports";
 import { useMemo, useState } from "react";
-import AvailabilityModal from "./AvailabilityModal";
+import AvailabilityModal from "../availModalComponents/AvailabilityModal";
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
-import { getShiftsByDateAction } from "../actions/shifts";
+import { getShiftsByDateAction } from "../../actions/shifts";
 import { convertShiftsForEventCalendar } from "@/lib/utils/calendar/convertShiftsForEventCalendar";
 import { getAvailableMembers } from "@/lib/utils/calendar/getAvailableMembers";
+import { convertBusyBlocksForCalendar } from "@/lib/utils/calendar/convertBusyBlocksForCalendar";
 type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
@@ -35,9 +36,13 @@ const TeamScheduleCalendarComp = ({
   const [modalShifts, setModalShifts] = useState<Shifts[]>([]);
 
   const events = useMemo(
-    () => convertShiftsForEventCalendar(calendarShifts),
-    [calendarShifts],
+    () => [
+      ...convertShiftsForEventCalendar(calendarShifts),
+      ...convertBusyBlocksForCalendar(busyBlocks),
+    ],
+    [calendarShifts, busyBlocks, teamMembers],
   );
+
   const availableMembers = getAvailableMembers(
     teamMembers,
     modalShifts,
@@ -64,23 +69,61 @@ const TeamScheduleCalendarComp = ({
         dateClick={handleDateClick}
         events={events}
         eventInteractive={false}
-        eventContent={(arg) => (
-          <div className="flex items-center gap-1 px-1">
-            {arg.event.extendedProps.avatarUrl && (
-              <img
-                src={arg.event.extendedProps.avatarUrl}
-                className="w-4 h-4 rounded-full"
-              />
-            )}
-            <span className="text-xs truncate">{arg.event.title}</span>
-          </div>
-        )}
+        eventBackgroundColor="transparent"
+        eventBorderColor="transparent"
+        dayCellContent={(arg) => {
+          const dateStr = arg.date.toISOString().split("T")[0];
+          console.log(busyBlocks);
+          const busyCount = new Set(
+            busyBlocks
+              .filter(
+                (block) =>
+                  new Date(block.start_time).toISOString().split("T")[0] ===
+                  dateStr,
+              )
+              .map((block) => block.user_id),
+          ).size;
+
+          return (
+            <div className="flex justify-between items-center w-full px-1">
+              <div className="flex gap-0.5 flex-wrap">
+                {Array.from({ length: busyCount }).map((_, i) => (
+                  <span key={i} className="text-red-500 text-xs font-bold">
+                    ✕
+                  </span>
+                ))}
+              </div>
+              <span>{arg.dayNumberText}</span>
+            </div>
+          );
+        }}
+        eventContent={(arg) => {
+          return (
+            <div className="flex items-center gap-1 px-1">
+              {arg.event.extendedProps.avatarUrl && (
+                <img
+                  src={arg.event.extendedProps.avatarUrl}
+                  className="w-4 h-4 rounded-full"
+                />
+              )}
+              <span className="text-xs truncate">{arg.event.title}</span>
+            </div>
+          );
+        }}
         dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
       />
 
       <AvailabilityModal
         selectedDate={selectedDate}
         availableMembers={availableMembers}
+        unavailableMembers={teamMembers.filter((member) =>
+          busyBlocks.some(
+            (block) =>
+              block.user_id === member.user_id &&
+              new Date(block.start_time).toISOString().split("T")[0] ===
+                selectedDate,
+          ),
+        )}
         onClose={() => setSelectedDate(null)}
         teamId={teamId}
         roles={roles}

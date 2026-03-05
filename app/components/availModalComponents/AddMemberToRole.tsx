@@ -1,5 +1,5 @@
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
-import { assignShiftAction } from "../actions/shifts";
+import { assignShiftAction } from "../../actions/shifts";
 import { groupShiftsByRole } from "@/lib/utils/shifts/groupShiftsByRole";
 import Image from "next/image";
 type Props = {
@@ -25,7 +25,6 @@ export const AddMemberToRole = ({
   const assignedUserIds = new Set(
     shifts.map((shift) => shift.assigned_user_id).filter(Boolean),
   );
-  console.log(availableMembers, "avail");
 
   return (
     <div className="border-t pt-4 space-y-4">
