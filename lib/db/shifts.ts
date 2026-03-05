@@ -29,7 +29,12 @@ export async function fetchShiftsByDate(
 
   const { data, error } = await supabase
     .from("shifts")
-    .select("*")
+    .select(
+      `
+  *,
+  profiles:assigned_user_id(display_name, avatar_url)
+`,
+    )
     .eq("team_id", teamId)
     .gte("start_time", start_time)
     .lte("end_time", end_time)
@@ -74,7 +79,12 @@ export async function updateShiftAssignment(
       assigned_user_id: user_id || null,
     })
     .eq("id", shiftId)
-    .select()
+    .select(
+      `
+  *,
+  profiles:assigned_user_id(display_name, avatar_url)
+`,
+    )
     .single();
 
   if (error) throw error;

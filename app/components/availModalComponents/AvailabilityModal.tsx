@@ -8,23 +8,27 @@ import {
 } from "@/components/ui/dialog";
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
 import { AddMemberToRole } from "./AddMemberToRole";
-import CreateShift from "./shifts/CreateShift";
+import CreateShift from "./CreateShift";
 import Image from "next/image";
+import UnavailableMembers from "./UnavailableMembers";
 
 type Props = {
   selectedDate: string | null;
   availableMembers: TeamMember[];
+
   onClose: () => void;
   teamId: string;
   roles: TeamRoles[];
   shifts: Shifts[];
   onShiftCreated: (newShifts: Shifts[]) => void;
   onShiftAssigned: (updatedShift: Shifts) => void;
+  unavailableMembers: TeamMember[];
 };
 
 const AvailabilityModal = ({
   selectedDate,
   availableMembers,
+  unavailableMembers,
   onClose,
   teamId,
   roles,
@@ -76,6 +80,9 @@ const AvailabilityModal = ({
             availableMembers={availableMembers}
             onShiftAssigned={onShiftAssigned}
           />
+        )}
+        {unavailableMembers.length > 0 && (
+          <UnavailableMembers unavailableMembers={unavailableMembers} />
         )}
       </DialogContent>
     </Dialog>

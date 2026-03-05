@@ -1,6 +1,7 @@
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
-import { assignShiftAction } from "../actions/shifts";
+import { assignShiftAction } from "../../actions/shifts";
 import { groupShiftsByRole } from "@/lib/utils/shifts/groupShiftsByRole";
+import Image from "next/image";
 type Props = {
   shifts: Shifts[];
   roles: TeamRoles[];
@@ -38,7 +39,15 @@ export const AddMemberToRole = ({
               <span className="text-sm w-24">
                 {shift.assigned_user_id ? "Filled" : "Open"}
               </span>
-
+              {shift.profiles?.avatar_url && (
+                <Image
+                  src={shift.profiles.avatar_url}
+                  width={24}
+                  height={24}
+                  className="rounded-full object-cover"
+                  alt="avatar"
+                />
+              )}
               <select
                 value={shift.assigned_user_id ?? ""}
                 onChange={(e) => handleAssign(shift.id, e.target.value)}
@@ -50,7 +59,7 @@ export const AddMemberToRole = ({
                     (m) => m.user_id === shift.assigned_user_id,
                   ) && (
                     <option value={shift.assigned_user_id}>
-                      {shift.assigned_user_id}
+                      {shift.profiles.display_name}
                     </option>
                   )}
                 {availableMembers
@@ -61,7 +70,7 @@ export const AddMemberToRole = ({
                   )
                   .map((member) => (
                     <option key={member.id} value={member.user_id ?? ""}>
-                      {member.user_id}
+                      {member?.profiles?.display_name}
                     </option>
                   ))}
               </select>
