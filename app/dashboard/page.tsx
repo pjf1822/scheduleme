@@ -15,7 +15,6 @@ const page = async () => {
     const { busyBlocks, teamMembers, teamId, shifts } =
       await getAdminTeamData();
 
-    console.log(teamMembers, "show me the avatar");
     const roles = await getTeamRoles(teamId);
 
     return (

@@ -1,5 +1,5 @@
 import { TeamMember } from "@/lib/types/dbexports";
-import Image from "next/image";
+import { MemberAvatar } from "../uiPieces/MemberAvatar";
 type Props = { unavailableMembers: TeamMember[] };
 
 const UnavailableMembers = ({ unavailableMembers }: Props) => {
@@ -12,13 +12,10 @@ const UnavailableMembers = ({ unavailableMembers }: Props) => {
             key={member.id}
             className="flex-shrink-0 flex flex-col items-center gap-2 p-3 border border-red-200 rounded w-24 opacity-50"
           >
-            <Image
-              src={member?.profiles?.avatar_url || "/default-avatar.png"}
-              width={48}
-              height={48}
-              className="rounded-full object-cover grayscale"
-              alt="avatar"
-            />
+            <div className="grayscale">
+              <MemberAvatar member={member} />
+            </div>
+
             <span className="text-sm text-center">
               {member?.profiles?.display_name}
             </span>

@@ -16,6 +16,7 @@ import { getShiftsByDateAction } from "../../actions/shifts";
 import { convertShiftsForEventCalendar } from "@/lib/utils/calendar/convertShiftsForEventCalendar";
 import { getAvailableMembers } from "@/lib/utils/calendar/getAvailableMembers";
 import { convertBusyBlocksForCalendar } from "@/lib/utils/calendar/convertBusyBlocksForCalendar";
+import { MemberAvatar } from "../uiPieces/MemberAvatar";
 type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
@@ -40,9 +41,10 @@ const TeamScheduleCalendarComp = ({
       ...convertShiftsForEventCalendar(calendarShifts),
       ...convertBusyBlocksForCalendar(busyBlocks),
     ],
-    [calendarShifts, busyBlocks, teamMembers],
+    [calendarShifts, busyBlocks],
   );
 
+  console.log(events);
   const availableMembers = getAvailableMembers(
     teamMembers,
     modalShifts,
@@ -73,7 +75,6 @@ const TeamScheduleCalendarComp = ({
         eventBorderColor="transparent"
         dayCellContent={(arg) => {
           const dateStr = arg.date.toISOString().split("T")[0];
-          console.log(busyBlocks);
           const busyCount = new Set(
             busyBlocks
               .filter(
@@ -98,17 +99,22 @@ const TeamScheduleCalendarComp = ({
           );
         }}
         eventContent={(arg) => {
-          return (
-            <div className="flex items-center gap-1 px-1">
-              {arg.event.extendedProps.avatarUrl && (
-                <img
-                  src={arg.event.extendedProps.avatarUrl}
-                  className="w-4 h-4 rounded-full"
+          const type = arg.event.extendedProps.type;
+
+          if (type === "shift") {
+            return (
+              <div className="flex items-center gap-1 px-1">
+                <MemberAvatar
+                  avatarUrl={arg.event.extendedProps.avatarUrl}
+                  name={arg.event.title}
+                  size="h-4 w-4"
                 />
-              )}
-              <span className="text-xs truncate">{arg.event.title}</span>
-            </div>
-          );
+                <span className="text-xs truncate">{arg.event.title}</span>
+              </div>
+            );
+          }
+
+          return null;
         }}
         dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
       />

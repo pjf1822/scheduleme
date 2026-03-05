@@ -11,6 +11,7 @@ import { AddMemberToRole } from "./AddMemberToRole";
 import CreateShift from "./CreateShift";
 import Image from "next/image";
 import UnavailableMembers from "./UnavailableMembers";
+import { MemberAvatar } from "../uiPieces/MemberAvatar";
 
 type Props = {
   selectedDate: string | null;
@@ -51,13 +52,7 @@ const AvailabilityModal = ({
                 key={member.id}
                 className="flex-shrink-0 flex flex-col items-center gap-2 p-3 border rounded w-24"
               >
-                <Image
-                  src={member?.profiles?.avatar_url || "/default-avatar.png"}
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover"
-                  alt="avatar"
-                />
+                <MemberAvatar member={member} size="h-12 w-12" />
 
                 <span className="text-sm text-center">
                   {member?.profiles?.display_name}
