@@ -38,7 +38,7 @@ const CreateShift = ({
 
   return (
     <div className="border-t pt-4 space-y-2">
-      <h3 className="font-semibold">Add Role Need</h3>
+      <h3 className="font-semibold">Create Shifts</h3>
 
       <div className="flex gap-2">
         <select

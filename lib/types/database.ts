@@ -38,6 +38,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       role_permissions: {
         Row: {
           id: number
@@ -60,7 +81,6 @@ export type Database = {
         Row: {
           assigned_user_id: string | null
           created_at: string | null
-          created_by: string | null
           end_time: string
           id: string
           role_id: string
@@ -70,7 +90,6 @@ export type Database = {
         Insert: {
           assigned_user_id?: string | null
           created_at?: string | null
-          created_by?: string | null
           end_time: string
           id?: string
           role_id: string
@@ -80,7 +99,6 @@ export type Database = {
         Update: {
           assigned_user_id?: string | null
           created_at?: string | null
-          created_by?: string | null
           end_time?: string
           id?: string
           role_id?: string
@@ -93,6 +111,13 @@ export type Database = {
             columns: ["role_id"]
             isOneToOne: false
             referencedRelation: "team_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
@@ -125,6 +150,13 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

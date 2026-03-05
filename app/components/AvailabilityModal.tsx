@@ -9,6 +9,7 @@ import {
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
 import { AddMemberToRole } from "./AddMemberToRole";
 import CreateShift from "./shifts/CreateShift";
+import Image from "next/image";
 
 type Props = {
   selectedDate: string | null;
@@ -40,13 +41,23 @@ const AvailabilityModal = ({
         {availableMembers.length === 0 ? (
           <p>No members more available on this date</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="flex gap-3 overflow-x-auto pb-2">
             {availableMembers.map((member) => (
               <li
                 key={member.id}
-                className="p-2 border rounded flex justify-between items-center"
+                className="flex-shrink-0 flex flex-col items-center gap-2 p-3 border rounded w-24"
               >
-                <span>{member.user_id}</span>
+                <Image
+                  src={member?.profiles?.avatar_url || "/default-avatar.png"}
+                  width={48}
+                  height={48}
+                  className="rounded-full object-cover"
+                  alt="avatar"
+                />
+
+                <span className="text-sm text-center">
+                  {member?.profiles?.display_name}
+                </span>
               </li>
             ))}
           </ul>

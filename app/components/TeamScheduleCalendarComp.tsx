@@ -31,13 +31,17 @@ const TeamScheduleCalendarComp = ({
   roles,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [shifts, setShifts] = useState<Shifts[]>(initialShifts);
+  const [calendarShifts, setCalendarShifts] = useState<Shifts[]>(initialShifts);
+  const [modalShifts, setModalShifts] = useState<Shifts[]>([]);
 
-  const events = useMemo(() => convertShiftsForEventCalendar(shifts), [shifts]);
-
+  const events = useMemo(
+    () => convertShiftsForEventCalendar(calendarShifts),
+    [calendarShifts],
+  );
+  console.log(events);
   const availableMembers = getAvailableMembers(
     teamMembers,
-    shifts,
+    modalShifts,
     busyBlocks,
     selectedDate,
   );
@@ -45,7 +49,7 @@ const TeamScheduleCalendarComp = ({
   const handleDateClick = async (info: any) => {
     const { start_time, end_time } = createBlockFromDate(info.dateStr);
     const dayShifts = await getShiftsByDateAction(teamId, start_time, end_time);
-    setShifts(dayShifts);
+    setModalShifts(dayShifts);
     setSelectedDate(info.dateStr);
   };
   return (
@@ -75,15 +79,17 @@ const TeamScheduleCalendarComp = ({
         onClose={() => setSelectedDate(null)}
         teamId={teamId}
         roles={roles}
-        shifts={shifts}
-        onShiftCreated={(newShifts) =>
-          setShifts((prev) => [...prev, ...newShifts])
-        }
-        onShiftAssigned={(updatedShift) =>
-          setShifts((prev) =>
-            prev.map((s) => (s.id === updatedShift.id ? updatedShift : s)),
-          )
-        }
+        shifts={modalShifts}
+        onShiftCreated={(newShifts) => {
+          setModalShifts((prev) => [...prev, ...newShifts]);
+          setCalendarShifts((prev) => [...prev, ...newShifts]);
+        }}
+        onShiftAssigned={(updatedShift) => {
+          const update = (prev: Shifts[]) =>
+            prev.map((s) => (s.id === updatedShift.id ? updatedShift : s));
+          setModalShifts(update);
+          setCalendarShifts(update);
+        }}
       />
     </div>
   );
