@@ -11,4 +11,7 @@ export type TeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
   profiles: Pick<Profile, "display_name" | "avatar_url"> | null;
 };
 export type TeamRoles = Database["public"]["Tables"]["team_roles"]["Row"];
-export type Shifts = Database["public"]["Tables"]["shifts"]["Row"];
+
+export type Shifts = Database["public"]["Tables"]["shifts"]["Row"] & {
+  profiles: Pick<Profile, "display_name" | "avatar_url"> | null;
+};

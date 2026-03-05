@@ -6,7 +6,12 @@ export async function fetchShiftsByTeamId(teamId: string) {
 
   const { data, error } = await supabase
     .from("shifts")
-    .select("*")
+    .select(
+      `
+    *,
+    profiles:assigned_user_id(display_name, avatar_url)
+  `,
+    )
     .eq("team_id", teamId);
 
   if (error) throw error;

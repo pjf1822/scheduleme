@@ -65,6 +65,17 @@ const TeamScheduleCalendarComp = ({
         dateClick={handleDateClick}
         events={events}
         eventInteractive={false}
+        eventContent={(arg) => (
+          <div className="flex items-center gap-1 px-1">
+            {arg.event.extendedProps.avatarUrl && (
+              <img
+                src={arg.event.extendedProps.avatarUrl}
+                className="w-4 h-4 rounded-full"
+              />
+            )}
+            <span className="text-xs truncate">{arg.event.title}</span>
+          </div>
+        )}
         dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
         // eventClick={(info) => {
         //   info.jsEvent.preventDefault();
