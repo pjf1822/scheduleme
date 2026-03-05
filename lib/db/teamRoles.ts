@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
-export async function getTeamRoles(teamId: string) {
+export async function fetchTeamRoles(teamId: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase

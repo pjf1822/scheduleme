@@ -1,6 +1,12 @@
-import { getBusyBlocksByUserId, insertBusyBlock } from "@/lib/db/busyBlocks";
+import {
+  deleteBusyBlock,
+  fetchBusyBlocksByUserIds,
+  fetchBusyBlocksByUserId,
+  insertBusyBlock,
+} from "@/lib/db/busyBlocks";
 import { createClient } from "../supabase/server";
 // FOR USER
+//. 1
 export async function getCurrentUserBusyBlocks() {
   const supabase = await createClient();
 
@@ -12,11 +18,11 @@ export async function getCurrentUserBusyBlocks() {
     throw new Error("Not authenticated");
   }
 
-  const busyBlocks = await getBusyBlocksByUserId(user.id);
+  const busyBlocks = await fetchBusyBlocksByUserId(user.id);
 
   return busyBlocks;
 }
-
+//. 2
 export async function addBusyBlock(params: {
   start_time: string;
   end_time: string;
@@ -44,9 +50,7 @@ export async function addBusyBlock(params: {
     endTime: endTime.toISOString(),
   });
 }
-
-import { deleteBusyBlock } from "@/lib/db/busyBlocks";
-
+//. 3
 export async function removeBusyBlock(id: string) {
   const supabase = await createClient();
 
@@ -60,15 +64,7 @@ export async function removeBusyBlock(id: string) {
 }
 
 //FOR ADMIN
+//. 4
 export async function getBusyBlocksByUserIds(userIds: string[]) {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("busy_blocks")
-    .select("*")
-    .in("user_id", userIds);
-
-  if (error) throw error;
-
-  return data;
+  return fetchBusyBlocksByUserIds(userIds);
 }

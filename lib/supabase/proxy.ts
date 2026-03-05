@@ -54,7 +54,9 @@ export async function updateSession(request: NextRequest) {
   // IF USER NOT LOGGED IN THEN DO NOT ALLOW DASHBOARD
   if (
     user &&
-    (request.nextUrl.pathname.startsWith("/auth") ||
+    ((request.nextUrl.pathname.startsWith("/auth") &&
+      !request.nextUrl.pathname.startsWith("/auth/confirm") &&
+      !request.nextUrl.pathname.startsWith("/auth/reset-password")) ||
       request.nextUrl.pathname === "/")
   ) {
     const url = request.nextUrl.clone();

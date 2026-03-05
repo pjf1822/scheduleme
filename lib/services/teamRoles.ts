@@ -1,12 +1,12 @@
 import {
-  getTeamRoles,
   insertTeamRole,
   updateTeamRole,
   deleteTeamRole,
+  fetchTeamRoles,
 } from "@/lib/db/teamRoles";
 
-export async function fetchTeamRoles(teamId: string) {
-  return getTeamRoles(teamId);
+export async function getTeamRoles(teamId: string) {
+  return fetchTeamRoles(teamId);
 }
 
 export async function createTeamRole(

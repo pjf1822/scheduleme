@@ -1,6 +1,8 @@
 import { createClient } from "../supabase/server";
 
-export async function getBusyBlocksByUserId(userId: string) {
+// FOR USER
+//. 1
+export async function fetchBusyBlocksByUserId(userId: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -12,7 +14,7 @@ export async function getBusyBlocksByUserId(userId: string) {
 
   return data;
 }
-
+//. 2
 export async function insertBusyBlock(params: {
   userId: string;
   startTime: string;
@@ -34,11 +36,24 @@ export async function insertBusyBlock(params: {
 
   return data;
 }
-
+//. 3
 export async function deleteBusyBlock(id: string) {
   const supabase = await createClient();
 
   const { error } = await supabase.from("busy_blocks").delete().eq("id", id);
 
   if (error) throw error;
+}
+//FOR ADMIN
+//. 4
+export async function fetchBusyBlocksByUserIds(userIds: string[]) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("busy_blocks")
+    .select("*")
+    .in("user_id", userIds);
+
+  if (error) throw error;
+  return data;
 }

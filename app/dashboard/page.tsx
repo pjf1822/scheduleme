@@ -3,7 +3,7 @@ import CalendarComp from "../components/CalendarComp";
 import { createClient } from "@/lib/supabase/server";
 import { getAdminTeamData } from "@/lib/services/admin";
 import TeamScheduleCalendarComp from "../components/TeamScheduleCalendarComp";
-import { fetchTeamRoles } from "@/lib/services/teamRoles";
+import { getTeamRoles } from "@/lib/services/teamRoles";
 
 const page = async () => {
   const supabase = await createClient();
@@ -12,10 +12,11 @@ const page = async () => {
   const userRole = data?.claims?.user_role;
 
   if (userRole === "admin") {
-    const { busyBlocks, teamMembers, teamId, scheduleBlocks } =
+    const { busyBlocks, teamMembers, teamId, shifts } =
       await getAdminTeamData();
 
-    const roles = await fetchTeamRoles(teamId);
+    console.log(teamMembers, "show me the avatar");
+    const roles = await getTeamRoles(teamId);
 
     return (
       <div>
@@ -24,7 +25,7 @@ const page = async () => {
           busyBlocks={busyBlocks}
           teamMembers={teamMembers}
           teamId={teamId}
-          initialScheduleBlocks={scheduleBlocks}
+          shifts={shifts}
           roles={roles}
         />
       </div>

@@ -1,18 +1,5 @@
 import { createClient } from "../supabase/server";
 
-export async function getTeamScheduleByTeamId(teamId: string) {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("team_schedule")
-    .select("*")
-    .eq("team_id", teamId);
-
-  if (error) throw error;
-
-  return data;
-}
-
 export async function getTeamContextForUser(userId: string) {
   const supabase = await createClient();
 
@@ -28,7 +15,12 @@ export async function getTeamContextForUser(userId: string) {
   // 2️⃣ fetch entire team
   const { data: teamMembers, error: teamError } = await supabase
     .from("team_members")
-    .select("*")
+    .select(
+      `
+      *,
+      profiles(display_name, avatar_url)
+    `,
+    )
     .eq("team_id", membership.team_id);
 
   if (teamError) throw teamError;

@@ -5,8 +5,13 @@ export type BusyBlock = Database["public"]["Tables"]["busy_blocks"]["Row"];
 export type BusyBlockInsert =
   Database["public"]["Tables"]["busy_blocks"]["Insert"];
 
-export type TeamMember = Database["public"]["Tables"]["team_members"]["Row"];
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-export type TeamSchedule = Database["public"]["Tables"]["team_schedule"]["Row"];
+export type TeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
+  profiles: Pick<Profile, "display_name" | "avatar_url"> | null;
+};
 export type TeamRoles = Database["public"]["Tables"]["team_roles"]["Row"];
-export type RoleSlots = Database["public"]["Tables"]["event_role_slots"]["Row"];
+
+export type Shifts = Database["public"]["Tables"]["shifts"]["Row"] & {
+  profiles: Pick<Profile, "display_name" | "avatar_url"> | null;
+};

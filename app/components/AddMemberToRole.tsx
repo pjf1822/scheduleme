@@ -1,62 +1,63 @@
-import { TeamMember, TeamRoles } from "@/lib/types/dbexports";
-import { assignRoleSlotAction } from "../actions/roleSlots/roleSlotActions";
-import { groupSlotsByRole } from "@/lib/utils/roleSlots/groupSlotsByRole";
+import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
+import { assignShiftAction } from "../actions/shifts";
+import { groupShiftsByRole } from "@/lib/utils/shifts/groupShiftsByRole";
 type Props = {
-  roleSlots: any[];
+  shifts: Shifts[];
   roles: TeamRoles[];
   availableMembers: TeamMember[];
-  onAssigned: (slotId: string, userId: string | null) => void;
+  onShiftAssigned: (updatedShift: Shifts) => void;
 };
 export const AddMemberToRole = ({
-  roleSlots,
+  shifts,
   roles,
   availableMembers,
-  onAssigned,
+  onShiftAssigned,
 }: Props) => {
-  const grouped = groupSlotsByRole(roleSlots, roles);
+  const grouped = groupShiftsByRole(shifts, roles);
 
-  const handleAssign = async (slotId: string, user_id: string) => {
+  const handleAssign = async (shiftId: string, user_id: string) => {
     const value = user_id === "" ? null : user_id;
-
-    await assignRoleSlotAction(slotId, value);
-    onAssigned(slotId, value);
+    const updatedShift = await assignShiftAction(shiftId, value);
+    onShiftAssigned(updatedShift);
   };
+
   const assignedUserIds = new Set(
-    roleSlots.map((slot) => slot.assigned_user_id).filter(Boolean),
+    shifts.map((shift) => shift.assigned_user_id).filter(Boolean),
   );
+
   return (
     <div className="border-t pt-4 space-y-4">
       <h3 className="font-semibold">Assign Members to Roles</h3>
 
-      {[...grouped.entries()].map(([roleName, slots]) => (
+      {[...grouped.entries()].map(([roleName, shifts]) => (
         <div key={roleName}>
           <h4 className="font-medium">{roleName}</h4>
 
-          {slots.map((slot: any) => (
-            <div key={slot.id} className="flex gap-2 items-center">
+          {shifts.map((shift: any) => (
+            <div key={shift.id} className="flex gap-2 items-center">
               <span className="text-sm w-24">
-                {slot.assigned_user_id ? "Filled" : "Open"}
+                {shift.assigned_user_id ? "Filled" : "Open"}
               </span>
 
               <select
-                value={slot.assigned_user_id ?? ""}
-                onChange={(e) => handleAssign(slot.id, e.target.value)}
+                value={shift.assigned_user_id ?? ""}
+                onChange={(e) => handleAssign(shift.id, e.target.value)}
                 className="border px-2 py-1"
               >
                 <option value="">Unassigned</option>
-                {slot.assigned_user_id &&
+                {shift.assigned_user_id &&
                   !availableMembers.some(
-                    (m) => m.user_id === slot.assigned_user_id,
+                    (m) => m.user_id === shift.assigned_user_id,
                   ) && (
-                    <option value={slot.assigned_user_id}>
-                      {slot.assigned_user_id}
+                    <option value={shift.assigned_user_id}>
+                      {shift.assigned_user_id}
                     </option>
                   )}
                 {availableMembers
                   .filter(
                     (member) =>
                       !assignedUserIds.has(member.user_id) ||
-                      member.user_id === slot.assigned_user_id,
+                      member.user_id === shift.assigned_user_id,
                   )
                   .map((member) => (
                     <option key={member.id} value={member.user_id ?? ""}>

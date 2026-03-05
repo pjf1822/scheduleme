@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
+
+import { TeamRoles } from "@/lib/types/dbexports";
 import {
   createTeamRoleAction,
   deleteTeamRoleAction,
   updateTeamRoleAction,
-} from "../actions/settings/teamRoles";
-import { TeamRoles } from "@/lib/types/dbexports";
+} from "../../actions/teamRoles";
 type Props = {
   roles: TeamRoles[];
   teamId: string;

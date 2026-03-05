@@ -5,24 +5,21 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import {
   BusyBlock,
-  RoleSlots,
+  Shifts,
   TeamMember,
   TeamRoles,
-  TeamSchedule,
 } from "@/lib/types/dbexports";
 import { useMemo, useState } from "react";
 import AvailabilityModal from "./AvailabilityModal";
-import { getBusyBlocksByMember } from "@/lib/utils/calendar/getBusyBlocksByMember";
-import { getEventsFromScheduleBlocks } from "@/lib/utils/calendar/getEventsFromScheduleBlocks";
-import { getScheduleBlocksForDate } from "@/lib/utils/calendar/getScheduleBlocksForDate";
-import { getAssignableMembersForDate } from "@/lib/utils/calendar/getAssignableMembersForDate";
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
-import { getRoleSlotsAction } from "../actions/roleSlots/roleSlotActions";
+import { getShiftsByDateAction } from "../actions/shifts";
+import { convertShiftsForEventCalendar } from "@/lib/utils/calendar/convertShiftsForEventCalendar";
+import { getAvailableMembers } from "@/lib/utils/calendar/getAvailableMembers";
 type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
   teamId: string;
-  initialScheduleBlocks: TeamSchedule[];
+  shifts: Shifts[];
   roles: TeamRoles[];
 };
 
@@ -30,40 +27,31 @@ const TeamScheduleCalendarComp = ({
   busyBlocks,
   teamMembers,
   teamId,
-  initialScheduleBlocks,
+  shifts: initialShifts,
   roles,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [scheduleBlocks, setScheduleBlocks] = useState<TeamSchedule[]>(
-    initialScheduleBlocks,
+  const [calendarShifts, setCalendarShifts] = useState<Shifts[]>(initialShifts);
+  const [modalShifts, setModalShifts] = useState<Shifts[]>([]);
+
+  const events = useMemo(
+    () => convertShiftsForEventCalendar(calendarShifts),
+    [calendarShifts],
+  );
+  console.log(events);
+  const availableMembers = getAvailableMembers(
+    teamMembers,
+    modalShifts,
+    busyBlocks,
+    selectedDate,
   );
 
-  const [roleSlots, setRoleSlots] = useState<RoleSlots[]>([]);
-  const busyBlocksByMember = getBusyBlocksByMember(teamMembers, busyBlocks);
-  const events = useMemo(
-    () => getEventsFromScheduleBlocks(scheduleBlocks),
-    [scheduleBlocks],
-  );
   const handleDateClick = async (info: any) => {
     const { start_time, end_time } = createBlockFromDate(info.dateStr);
-    const slots = await getRoleSlotsAction(teamId, start_time, end_time);
-
-    setRoleSlots(slots);
-
+    const dayShifts = await getShiftsByDateAction(teamId, start_time, end_time);
+    setModalShifts(dayShifts);
     setSelectedDate(info.dateStr);
   };
-
-  const assignedMembers = getScheduleBlocksForDate(
-    selectedDate,
-    scheduleBlocks,
-  );
-  const availableMembers = getAssignableMembersForDate(
-    selectedDate,
-    teamMembers,
-    busyBlocks,
-    assignedMembers,
-  );
-
   return (
     <div>
       <h2>Team Schedule</h2>
@@ -77,6 +65,17 @@ const TeamScheduleCalendarComp = ({
         dateClick={handleDateClick}
         events={events}
         eventInteractive={false}
+        eventContent={(arg) => (
+          <div className="flex items-center gap-1 px-1">
+            {arg.event.extendedProps.avatarUrl && (
+              <img
+                src={arg.event.extendedProps.avatarUrl}
+                className="w-4 h-4 rounded-full"
+              />
+            )}
+            <span className="text-xs truncate">{arg.event.title}</span>
+          </div>
+        )}
         dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
         // eventClick={(info) => {
         //   info.jsEvent.preventDefault();
@@ -85,36 +84,23 @@ const TeamScheduleCalendarComp = ({
         // }}
       />
 
-      <div>
-        {busyBlocksByMember.map(({ member, blocks }) => (
-          <div key={member.id}>
-            <h3>{member.user_id}</h3>
-
-            <ul>
-              {blocks.map((block) => (
-                <li key={block.id}>
-                  {new Date(block.start_time).toLocaleDateString("en-CA")}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
       <AvailabilityModal
         selectedDate={selectedDate}
         availableMembers={availableMembers}
-        assignedMembers={assignedMembers}
         onClose={() => setSelectedDate(null)}
         teamId={teamId}
-        onAssign={(newBlock) =>
-          setScheduleBlocks((prev) => [...prev, newBlock])
-        }
-        onRemove={(blockId) => {
-          setScheduleBlocks((prev) => prev.filter((b) => b.id !== blockId));
-        }}
         roles={roles}
-        roleSlots={roleSlots}
-        setRoleSlots={setRoleSlots}
+        shifts={modalShifts}
+        onShiftCreated={(newShifts) => {
+          setModalShifts((prev) => [...prev, ...newShifts]);
+          setCalendarShifts((prev) => [...prev, ...newShifts]);
+        }}
+        onShiftAssigned={(updatedShift) => {
+          const update = (prev: Shifts[]) =>
+            prev.map((s) => (s.id === updatedShift.id ? updatedShift : s));
+          setModalShifts(update);
+          setCalendarShifts(update);
+        }}
       />
     </div>
   );

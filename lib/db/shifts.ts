@@ -1,19 +1,26 @@
 import { createClient } from "@/lib/supabase/server";
 
-export async function getRoleSlotByIdDB(slotId: string) {
+// initial data call
+export async function fetchShiftsByTeamId(teamId: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("event_role_slots")
-    .select("*")
-    .eq("id", slotId)
-    .single();
+    .from("shifts")
+    .select(
+      `
+    *,
+    profiles:assigned_user_id(display_name, avatar_url)
+  `,
+    )
+    .eq("team_id", teamId);
 
   if (error) throw error;
 
   return data;
 }
-export async function getRoleSlotsForDate(
+
+// when the admin clicks a date
+export async function fetchShiftsByDate(
   teamId: string,
   start_time: string,
   end_time: string,
@@ -21,7 +28,7 @@ export async function getRoleSlotsForDate(
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("event_role_slots")
+    .from("shifts")
     .select("*")
     .eq("team_id", teamId)
     .gte("start_time", start_time)
@@ -32,7 +39,7 @@ export async function getRoleSlotsForDate(
 
   return data;
 }
-export async function insertRoleSlot(
+export async function insertShift(
   teamId: string,
   roleId: string,
   start_time: string,
@@ -41,7 +48,7 @@ export async function insertRoleSlot(
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("event_role_slots")
+    .from("shifts")
     .insert({
       team_id: teamId,
       role_id: roleId,
@@ -55,18 +62,18 @@ export async function insertRoleSlot(
   return data;
 }
 
-export async function updateRoleSlotAssignment(
-  slotId: string,
+export async function updateShiftAssignment(
+  shiftId: string,
   user_id: string | null,
 ) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("event_role_slots")
+    .from("shifts")
     .update({
       assigned_user_id: user_id || null,
     })
-    .eq("id", slotId)
+    .eq("id", shiftId)
     .select()
     .single();
 
