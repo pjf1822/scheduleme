@@ -9,9 +9,7 @@ import {
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
 import { AddMemberToRole } from "./AddMemberToRole";
 import CreateShift from "./CreateShift";
-import Image from "next/image";
-import UnavailableMembers from "./UnavailableMembers";
-import { MemberAvatar } from "../uiPieces/MemberAvatar";
+import ModalMembersSection from "./ModalMembersSection";
 
 type Props = {
   selectedDate: string | null;
@@ -39,29 +37,10 @@ const AvailabilityModal = ({
 }: Props) => {
   return (
     <Dialog open={!!selectedDate} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Available on {selectedDate}</DialogTitle>
+          <DialogTitle className="text-center">{selectedDate}</DialogTitle>
         </DialogHeader>
-        {availableMembers.length === 0 ? (
-          <p>No members more available on this date</p>
-        ) : (
-          <ul className="flex gap-3 overflow-x-auto pb-2">
-            {availableMembers.map((member) => (
-              <li
-                key={member.id}
-                className="flex-shrink-0 flex flex-col items-center gap-2 p-3 border rounded w-24"
-              >
-                <MemberAvatar member={member} size="h-12 w-12" />
-
-                <span className="text-sm text-center">
-                  {member?.profiles?.display_name}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-
         <CreateShift
           selectedDate={selectedDate}
           teamId={teamId}
@@ -76,9 +55,28 @@ const AvailabilityModal = ({
             onShiftAssigned={onShiftAssigned}
           />
         )}
-        {unavailableMembers.length > 0 && (
-          <UnavailableMembers unavailableMembers={unavailableMembers} />
-        )}
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            {availableMembers.length === 0 ? (
+              <p>Every who is available is already working this day. </p>
+            ) : (
+              <ModalMembersSection
+                members={availableMembers}
+                title="Available"
+              />
+            )}
+          </div>
+
+          <div>
+            {unavailableMembers.length > 0 && (
+              <ModalMembersSection
+                members={unavailableMembers}
+                title="Unavailable"
+                variant="unavailable"
+              />
+            )}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -1,7 +1,14 @@
 import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
 import { assignShiftAction } from "../../actions/shifts";
 import { groupShiftsByRole } from "@/lib/utils/shifts/groupShiftsByRole";
-import Image from "next/image";
+import { MemberAvatar } from "../uiPieces/MemberAvatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 type Props = {
   shifts: Shifts[];
   roles: TeamRoles[];
@@ -17,7 +24,7 @@ export const AddMemberToRole = ({
   const grouped = groupShiftsByRole(shifts, roles);
 
   const handleAssign = async (shiftId: string, user_id: string) => {
-    const value = user_id === "" ? null : user_id;
+    const value = user_id === "unassigned" ? null : user_id;
     const updatedShift = await assignShiftAction(shiftId, value);
     onShiftAssigned(updatedShift);
   };
@@ -30,54 +37,74 @@ export const AddMemberToRole = ({
     <div className="border-t pt-4 space-y-4">
       <h3 className="font-semibold">Assign Members to Roles</h3>
 
-      {[...grouped.entries()].map(([roleName, shifts]) => (
-        <div key={roleName}>
-          <h4 className="font-medium">{roleName}</h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...grouped.entries()].map(([roleName, shifts]) => (
+          <div
+            key={roleName}
+            className="border rounded-lg p-4 space-y-2 bg-muted/20"
+          >
+            <h4 className="font-medium">{roleName}</h4>
 
-          {shifts.map((shift: any) => (
-            <div key={shift.id} className="flex gap-2 items-center">
-              <span className="text-sm w-24">
-                {shift.assigned_user_id ? "Filled" : "Open"}
-              </span>
-              {shift.profiles?.avatar_url && (
-                <Image
-                  src={shift.profiles.avatar_url}
-                  width={24}
-                  height={24}
-                  className="rounded-full object-cover"
-                  alt="avatar"
-                />
-              )}
-              <select
-                value={shift.assigned_user_id ?? ""}
-                onChange={(e) => handleAssign(shift.id, e.target.value)}
-                className="border px-2 py-1"
-              >
-                <option value="">Unassigned</option>
-                {shift.assigned_user_id &&
-                  !availableMembers.some(
-                    (m) => m.user_id === shift.assigned_user_id,
-                  ) && (
-                    <option value={shift.assigned_user_id}>
-                      {shift.profiles.display_name}
-                    </option>
-                  )}
-                {availableMembers
-                  .filter(
-                    (member) =>
-                      !assignedUserIds.has(member.user_id) ||
-                      member.user_id === shift.assigned_user_id,
-                  )
-                  .map((member) => (
-                    <option key={member.id} value={member.user_id ?? ""}>
-                      {member?.profiles?.display_name}
-                    </option>
-                  ))}
-              </select>
-            </div>
-          ))}
-        </div>
-      ))}
+            {shifts.map((shift: any) => (
+              <div key={shift.id} className="flex items-center gap-2 py-2 ">
+                {shift.assigned_user_id ? (
+                  <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-700">
+                    Filled
+                  </span>
+                ) : (
+                  <span className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600">
+                    Open
+                  </span>
+                )}
+                <Select
+                  value={shift.assigned_user_id ?? "unassigned"}
+                  onValueChange={(val) => handleAssign(shift.id, val)}
+                >
+                  <SelectTrigger className="w-[220px]">
+                    <SelectValue placeholder="Assign member" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectItem value="unassigned">Unassigned</SelectItem>
+                    {shift.assigned_user_id &&
+                      !availableMembers.some(
+                        (m) => m.user_id === shift.assigned_user_id,
+                      ) && (
+                        <SelectItem value={shift.assigned_user_id}>
+                          <div className="flex items-center gap-2">
+                            {shift.profiles?.avatar_url && (
+                              <MemberAvatar member={shift} size="sm" />
+                            )}
+                            <span>{shift.profiles.display_name}</span>
+                          </div>
+                        </SelectItem>
+                      )}
+                    {availableMembers
+                      .filter(
+                        (member) =>
+                          !assignedUserIds.has(member.user_id) ||
+                          member.user_id === shift.assigned_user_id,
+                      )
+                      .map((member) => (
+                        <SelectItem
+                          key={member.id}
+                          value={member.user_id ?? ""}
+                        >
+                          <div className="flex items-center gap-2">
+                            {member?.profiles?.avatar_url && (
+                              <MemberAvatar member={member} size="sm" />
+                            )}
+                            <span>{member?.profiles?.display_name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

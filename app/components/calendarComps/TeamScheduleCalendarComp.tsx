@@ -44,7 +44,6 @@ const TeamScheduleCalendarComp = ({
     [calendarShifts, busyBlocks],
   );
 
-  console.log(events);
   const availableMembers = getAvailableMembers(
     teamMembers,
     modalShifts,
@@ -107,7 +106,7 @@ const TeamScheduleCalendarComp = ({
                 <MemberAvatar
                   avatarUrl={arg.event.extendedProps.avatarUrl}
                   name={arg.event.title}
-                  size="h-4 w-4"
+                  size="lg"
                 />
                 <span className="text-xs truncate">{arg.event.title}</span>
               </div>
