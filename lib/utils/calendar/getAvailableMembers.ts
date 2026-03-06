@@ -1,8 +1,8 @@
-import { BusyBlock, Shifts, TeamMember } from "@/lib/types/dbexports";
+import { BusyBlock, ShiftWithProfile, TeamMember } from "@/lib/types/dbexports";
 
 export function getAvailableMembers(
   teamMembers: TeamMember[],
-  shifts: Shifts[],
+  shifts: ShiftWithProfile[],
   busyBlocks: BusyBlock[],
   selectedDate: string | null,
 ) {

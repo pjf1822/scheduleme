@@ -91,13 +91,8 @@ export async function updateShiftAssignment(
   return data;
 }
 
-export async function fetchShiftsForCurrentUser() {
+export async function fetchShiftsByUserId(userId: string) {
   const supabase = await createClient();
-
-  const { data: userData } = await supabase.auth.getUser();
-  const userId = userData.user?.id;
-
-  if (!userId) return [];
 
   const { data, error } = await supabase
     .from("shifts")

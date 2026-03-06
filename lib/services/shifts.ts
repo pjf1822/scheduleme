@@ -1,10 +1,11 @@
 import {
   fetchShiftsByDate,
   fetchShiftsByTeamId,
-  fetchShiftsForCurrentUser,
+  fetchShiftsByUserId,
   insertShift,
   updateShiftAssignment,
 } from "../db/shifts";
+import { createClient } from "../supabase/server";
 
 export async function getShiftsByTeamId(teamId: string) {
   return fetchShiftsByTeamId(teamId);
@@ -34,7 +35,12 @@ export async function assignShift(shiftId: string, user_id: string | null) {
 }
 
 export async function getCurrentUserShifts() {
-  const shifts = await fetchShiftsForCurrentUser();
+  const supabase = await createClient();
 
-  return shifts ?? [];
+  const { data } = await supabase.auth.getUser();
+  const userId = data.user?.id;
+
+  if (!userId) return [];
+
+  return fetchShiftsByUserId(userId);
 }

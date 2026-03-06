@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Shifts, TeamMember, TeamRoles } from "@/lib/types/dbexports";
+import { ShiftWithProfile, TeamMember, TeamRoles } from "@/lib/types/dbexports";
 import { AddMemberToRole } from "./AddMemberToRole";
 import CreateShift from "./CreateShift";
 import ModalMembersSection from "./ModalMembersSection";
@@ -18,9 +18,9 @@ type Props = {
   onClose: () => void;
   teamId: string;
   roles: TeamRoles[];
-  shifts: Shifts[];
-  onShiftCreated: (newShifts: Shifts[]) => void;
-  onShiftAssigned: (updatedShift: Shifts) => void;
+  shifts: ShiftWithProfile[];
+  onShiftCreated: (newShifts: ShiftWithProfile[]) => void;
+  onShiftAssigned: (updatedShift: ShiftWithProfile) => void;
   unavailableMembers: TeamMember[];
 };
 
