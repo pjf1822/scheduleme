@@ -3,24 +3,47 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getBusyDateMap } from "@/lib/utils/dates/getBusyDateMap";
-import { useRef } from "react";
-import { BusyBlock } from "@/lib/types/dbexports";
+import { useRef, useState } from "react";
+import { BusyBlock, UserShift } from "@/lib/types/dbexports";
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import {
   addBusyBlockAction,
   removeBusyBlockAction,
 } from "../../actions/busyBlocks";
+import { mapShiftsToEvents } from "@/lib/utils/shifts/ mapShiftsToEvents";
+import EventDetailModal from "../eventDetailModal/EventDetailModal";
 
 type Props = {
   busyBlocks: BusyBlock[];
+  shifts: UserShift[];
 };
 
-const CalendarComp = ({ busyBlocks }: Props) => {
+const CalendarComp = ({ busyBlocks, shifts }: Props) => {
   const pendingDates = useRef(new Set<string>());
   const busyDateMap = getBusyDateMap(busyBlocks);
+  const shiftEvents = mapShiftsToEvents(shifts);
+  const [selectedShift, setSelectedShift] = useState<UserShift | null>(null);
 
+  const handleEventClick = (info: any) => {
+    console.log(info, "hey");
+    const shiftId = info.event.id;
+
+    const shift = shifts.find((s) => s.id === shiftId);
+
+    if (shift) {
+      setSelectedShift(shift);
+    }
+  };
+  const shiftDateSet = new Set(
+    shifts.map((shift) =>
+      new Date(shift.start_time).toLocaleDateString("en-CA"),
+    ),
+  );
   const handleDateClick = async (info: any) => {
     const dateKey = info.dateStr;
+    if (shiftDateSet.has(dateKey)) {
+      return;
+    }
 
     if (pendingDates.current.has(dateKey)) {
       return;
@@ -42,23 +65,45 @@ const CalendarComp = ({ busyBlocks }: Props) => {
       pendingDates.current.delete(dateKey);
     }
   };
-  return (
-    <FullCalendar
-      plugins={[dayGridPlugin, interactionPlugin]}
-      dateClick={handleDateClick}
-      fixedWeekCount={false}
-      initialView="dayGridMonth"
-      showNonCurrentDates={false}
-      height="auto"
-      dayCellClassNames={(arg) => {
-        const dateString = arg.date.toLocaleDateString("en-CA");
 
-        if (busyDateMap.has(dateString)) {
-          return ["busy-day"];
-        }
-        return [];
-      }}
-    />
+  return (
+    <div>
+      <FullCalendar
+        plugins={[dayGridPlugin, interactionPlugin]}
+        dateClick={handleDateClick}
+        fixedWeekCount={false}
+        initialView="dayGridMonth"
+        eventClick={handleEventClick}
+        showNonCurrentDates={false}
+        events={shiftEvents}
+        height="auto"
+        eventContent={(arg) => {
+          const type = arg.event.extendedProps.type;
+
+          if (type === "shift") {
+            return (
+              <div className="flex items-center gap-1 px-1">
+                <span className="text-xs truncate">{arg.event.title}</span>
+              </div>
+            );
+          }
+
+          return null;
+        }}
+        dayCellClassNames={(arg) => {
+          const dateString = arg.date.toLocaleDateString("en-CA");
+
+          if (busyDateMap.has(dateString)) {
+            return ["busy-day"];
+          }
+          return [];
+        }}
+      />
+      <EventDetailModal
+        shift={selectedShift}
+        onClose={() => setSelectedShift(null)}
+      />
+    </div>
   );
 };
 

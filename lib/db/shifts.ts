@@ -90,3 +90,28 @@ export async function updateShiftAssignment(
   if (error) throw error;
   return data;
 }
+
+export async function fetchShiftsForCurrentUser() {
+  const supabase = await createClient();
+
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData.user?.id;
+
+  if (!userId) return [];
+
+  const { data, error } = await supabase
+    .from("shifts")
+    .select(
+      `
+      *,
+      profiles:assigned_user_id(display_name, avatar_url),
+      teams:team_id(name)
+    `,
+    )
+    .eq("assigned_user_id", userId)
+    .order("start_time");
+
+  if (error) throw error;
+
+  return data;
+}
