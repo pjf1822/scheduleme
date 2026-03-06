@@ -37,9 +37,11 @@ const AvailabilityModal = ({
 }: Props) => {
   return (
     <Dialog open={!!selectedDate} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-6xl max-h-[90vh] overflow-y-auto bg-[var(--brand-1)] border border-[color-mix(in_srgb,var(--brand-3)_40%,transparent)] shadow-xl">
         <DialogHeader>
-          <DialogTitle className="text-center">{selectedDate}</DialogTitle>
+          <DialogTitle className="text-center text-white">
+            {selectedDate}
+          </DialogTitle>
         </DialogHeader>
         <CreateShift
           selectedDate={selectedDate}
@@ -55,7 +57,7 @@ const AvailabilityModal = ({
             onShiftAssigned={onShiftAssigned}
           />
         )}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 bg-[var(--brand-4)] p-3 rounded-lg border border-[var(--brand-3)] border-4">
           <div>
             {availableMembers.length === 0 ? (
               <p>Every who is available is already working this day. </p>

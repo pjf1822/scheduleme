@@ -18,7 +18,7 @@ const page = async () => {
     const roles = await getTeamRoles(teamId);
 
     return (
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto ">
         <TeamScheduleCalendarComp
           busyBlocks={busyBlocks}
           teamMembers={teamMembers}

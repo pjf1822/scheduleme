@@ -9,8 +9,8 @@ const Navbar = ({
   email: string;
 }) => {
   return (
-    <nav className="w-full border-b bg-white">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-0 py-3">
+    <nav className="w-full border-b bg-brand-2 mb-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-0 py-3">
         <div className="flex items-center gap-6">
           <Link href="/dashboard" className="font-semibold">
             Home

@@ -15,7 +15,7 @@ const ModalMembersSection = ({
   const isUnavailable = variant === "unavailable";
 
   return (
-    <>
+    <div>
       <h3 className="font-semibold">{title}</h3>
 
       <ul className="flex gap-3 overflow-x-auto pb-2">
@@ -42,7 +42,7 @@ const ModalMembersSection = ({
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 

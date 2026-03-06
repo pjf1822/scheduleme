@@ -47,7 +47,7 @@ const CreateShift = ({
   };
 
   return (
-    <Card className="border-t mt-0 py-2 max-w-xl mx-auto w-full gap-2 ">
+    <Card className=" mt-0 py-2 max-w-xl mx-auto w-full gap-2 bg-[var(--brand-4)] border border-[var(--brand-3)] border-4 ">
       <CardHeader className="pb-0">
         <CardTitle className="text-sm font-medium">Create Shifts</CardTitle>
       </CardHeader>

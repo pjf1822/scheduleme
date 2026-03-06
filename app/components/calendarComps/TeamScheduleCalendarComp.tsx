@@ -115,7 +115,9 @@ const TeamScheduleCalendarComp = ({
 
           return null;
         }}
-        dayCellClassNames={() => "cursor-pointer hover:bg-gray-100"}
+        dayCellClassNames={() =>
+          "cursor-pointer border border-neutral-200 hover:bg-neutral-50 transition"
+        }
       />
 
       <AvailabilityModal
