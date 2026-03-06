@@ -38,6 +38,17 @@ export default function SignupPage() {
     }
   };
 
+  const handleGoogleSignup = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${location.origin}/auth/confirm`,
+      },
+    });
+
+    if (error) alert(error.message);
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center">
       <form
@@ -78,6 +89,13 @@ export default function SignupPage() {
           className="bg-black text-white p-2"
         >
           {loading ? "Signing up..." : "Sign up"}
+        </button>
+        <button
+          type="button"
+          onClick={handleGoogleSignup}
+          className="border p-2"
+        >
+          Continue with Google
         </button>
       </form>
     </div>
