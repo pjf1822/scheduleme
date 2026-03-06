@@ -8,6 +8,7 @@ export function convertShiftsForEventCalendar(shifts: Shifts[]) {
       start: shift.start_time as string,
       end: shift.end_time as string,
       extendedProps: {
+        type: "shift",
         avatarUrl: shift.profiles?.avatar_url,
       },
     }));

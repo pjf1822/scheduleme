@@ -15,12 +15,10 @@ const page = async () => {
     const { busyBlocks, teamMembers, teamId, shifts } =
       await getAdminTeamData();
 
-    console.log(teamMembers, "show me the avatar");
     const roles = await getTeamRoles(teamId);
 
     return (
-      <div>
-        <h1>Dashboard</h1>
+      <div className="max-w-7xl mx-auto ">
         <TeamScheduleCalendarComp
           busyBlocks={busyBlocks}
           teamMembers={teamMembers}
@@ -33,12 +31,7 @@ const page = async () => {
   }
 
   const busyBlocks = await getCurrentUserBusyBlocks();
-  return (
-    <div>
-      <h1>Dashboard</h1>
-      <CalendarComp busyBlocks={busyBlocks} />
-    </div>
-  );
+  return <CalendarComp busyBlocks={busyBlocks} />;
 };
 
 export default page;

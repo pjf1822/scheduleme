@@ -9,12 +9,28 @@ const Navbar = ({
   email: string;
 }) => {
   return (
-    <div>
-      {userRole === "admin" && <Link href="/admin">Admin</Link>}
-      {email}
-      <Link href="dashboard">home</Link>
-      <LogoutButton />
-    </div>
+    <nav className="w-full border-b bg-brand-2 mb-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-0 py-3">
+        <div className="flex items-center gap-6">
+          <Link href="/dashboard" className="font-semibold">
+            Home
+          </Link>
+          <span className="text-muted-foreground">{email}</span>
+        </div>
+
+        <div className="flex items-center gap-4 text-sm">
+          {userRole === "admin" && (
+            <Link
+              href="/admin"
+              className="text-sm text-muted-foreground hover:text-black"
+            >
+              Admin
+            </Link>
+          )}
+          <LogoutButton />
+        </div>
+      </div>
+    </nav>
   );
 };
 

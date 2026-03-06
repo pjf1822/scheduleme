@@ -2,6 +2,16 @@ import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import { useState } from "react";
 import { Shifts, TeamRoles } from "@/lib/types/dbexports";
 import { createShiftAction } from "../../actions/shifts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   selectedDate: string | null;
@@ -37,41 +47,60 @@ const CreateShift = ({
   };
 
   return (
-    <div className="border-t pt-4 space-y-2">
-      <h3 className="font-semibold">Create Shifts</h3>
+    <Card className=" mt-0 py-2 max-w-xl mx-auto w-full gap-2 bg-[var(--brand-4)] border border-[var(--brand-3)] border-4 ">
+      <CardHeader className="pb-0">
+        <CardTitle className="text-sm font-medium">Create Shifts</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        <div className="grid  grid-cols-2 gap-2">
+          <div>
+            <Label className="pb-2">Role</Label>
 
-      <div className="flex gap-2">
-        <select
-          value={selectedRoleId}
-          onChange={(e) => setSelectedRoleId(e.target.value)}
-        >
-          <option value="">Select role</option>
-          {roles.map((role) => (
-            <option key={role.id} value={role.id}>
-              {role.name}
-            </option>
-          ))}
-        </select>
-        <select
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-        >
-          {[1, 2, 3, 4, 5].map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
+            <Select value={selectedRoleId} onValueChange={setSelectedRoleId}>
+              <SelectTrigger className="w-full text-foreground">
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
 
-        <button
+              <SelectContent>
+                {roles.map((role) => (
+                  <SelectItem key={role.id} value={role.id}>
+                    {role.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className="pb-2">Quantity</Label>
+
+            <Select
+              value={String(quantity)}
+              onValueChange={(val) => setQuantity(Number(val))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+
+              <SelectContent>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+                  <SelectItem key={n} value={String(n)}>
+                    {n}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <Button
           disabled={!selectedRoleId}
           onClick={handleSubmit}
-          className="border px-3"
+          className="w-full mt-2"
         >
-          Submit
-        </button>
-      </div>
-    </div>
+          {quantity > 1 ? "Create Shifts" : "Create Shift"}
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
