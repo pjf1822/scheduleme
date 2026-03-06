@@ -33,7 +33,6 @@ const page = async () => {
 
   const busyBlocks = await getCurrentUserBusyBlocks();
   const shifts = await getCurrentUserShifts();
-  console.log(shifts);
   return (
     <div className="max-w-7xl mx-auto ">
       <CalendarComp busyBlocks={busyBlocks} shifts={shifts} />

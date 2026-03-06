@@ -105,7 +105,8 @@ export async function fetchShiftsForCurrentUser() {
       `
       *,
       profiles:assigned_user_id(display_name, avatar_url),
-      teams:team_id(name)
+      teams:team_id(name),
+       roles:role_id(name)
     `,
     )
     .eq("assigned_user_id", userId)

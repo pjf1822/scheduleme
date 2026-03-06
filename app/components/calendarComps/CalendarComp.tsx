@@ -24,24 +24,13 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
   const shiftEvents = mapShiftsToEvents(shifts);
   const [selectedShift, setSelectedShift] = useState<UserShift | null>(null);
 
-  const handleEventClick = (info: any) => {
-    console.log(info, "hey");
-    const shiftId = info.event.id;
-
-    const shift = shifts.find((s) => s.id === shiftId);
-
-    if (shift) {
-      setSelectedShift(shift);
-    }
-  };
-  const shiftDateSet = new Set(
-    shifts.map((shift) =>
-      new Date(shift.start_time).toLocaleDateString("en-CA"),
-    ),
-  );
   const handleDateClick = async (info: any) => {
     const dateKey = info.dateStr;
-    if (shiftDateSet.has(dateKey)) {
+    const shift = shifts.find(
+      (s) => new Date(s.start_time).toLocaleDateString("en-CA") === dateKey,
+    );
+    if (shift) {
+      setSelectedShift(shift);
       return;
     }
 
@@ -71,9 +60,9 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         dateClick={handleDateClick}
+        eventInteractive={false}
         fixedWeekCount={false}
         initialView="dayGridMonth"
-        eventClick={handleEventClick}
         showNonCurrentDates={false}
         events={shiftEvents}
         height="auto"
