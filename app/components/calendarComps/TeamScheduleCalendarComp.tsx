@@ -5,7 +5,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import {
   BusyBlock,
-  Shifts,
+  ShiftWithProfile,
   TeamMember,
   TeamRoles,
 } from "@/lib/types/dbexports";
@@ -21,7 +21,7 @@ type Props = {
   busyBlocks: BusyBlock[];
   teamMembers: TeamMember[];
   teamId: string;
-  shifts: Shifts[];
+  shifts: ShiftWithProfile[];
   roles: TeamRoles[];
 };
 
@@ -33,12 +33,13 @@ const TeamScheduleCalendarComp = ({
   roles,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [calendarShifts, setCalendarShifts] = useState<Shifts[]>(initialShifts);
-  const [modalShifts, setModalShifts] = useState<Shifts[]>([]);
+  const [calendarShifts, setCalendarShifts] =
+    useState<ShiftWithProfile[]>(initialShifts);
+  const [modalShifts, setModalShifts] = useState<ShiftWithProfile[]>([]);
 
   const events = useMemo(
     () => [
-      ...convertShiftsForEventCalendar(calendarShifts),
+      ...convertShiftsForEventCalendar(calendarShifts, roles),
       ...convertBusyBlocksForCalendar(busyBlocks),
     ],
     [calendarShifts, busyBlocks],
@@ -101,8 +102,16 @@ const TeamScheduleCalendarComp = ({
           const type = arg.event.extendedProps.type;
 
           if (type === "shift") {
+            const roleColor = arg.event.extendedProps.roleColor;
+
             return (
               <div className="flex items-center gap-1 px-1">
+                {roleColor && (
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: roleColor }}
+                  />
+                )}
                 <MemberAvatar
                   avatarUrl={arg.event.extendedProps.avatarUrl}
                   name={arg.event.title}
@@ -140,7 +149,7 @@ const TeamScheduleCalendarComp = ({
           setCalendarShifts((prev) => [...prev, ...newShifts]);
         }}
         onShiftAssigned={(updatedShift) => {
-          const update = (prev: Shifts[]) =>
+          const update = (prev: ShiftWithProfile[]) =>
             prev.map((s) => (s.id === updatedShift.id ? updatedShift : s));
           setModalShifts(update);
           setCalendarShifts(update);

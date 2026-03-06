@@ -1,23 +1,25 @@
-import { TeamRoles, Shifts } from "@/lib/types/dbexports";
+import { ShiftWithProfile, TeamRoles } from "@/lib/types/dbexports";
+
+type RoleGroup = {
+  color: string | null;
+  shifts: ShiftWithProfile[];
+};
 
 export function groupShiftsByRole(
-  shifts: Shifts[],
+  shifts: ShiftWithProfile[],
   roles: TeamRoles[],
-): Map<string, Shifts[]> {
-  const map = new Map<string, Shifts[]>();
+): Map<string, RoleGroup> {
+  const map = new Map<string, RoleGroup>();
 
   shifts.forEach((shift) => {
     const role = roles.find((r) => r.id === shift.role_id);
     if (!role) return;
 
-    let shifts = map.get(role.name);
-
-    if (!shifts) {
-      shifts = [];
-      map.set(role.name, shifts);
+    if (!map.has(role.name)) {
+      map.set(role.name, { color: role.color ?? null, shifts: [] });
     }
 
-    shifts.push(shift);
+    map.get(role.name)!.shifts.push(shift);
   });
 
   return map;

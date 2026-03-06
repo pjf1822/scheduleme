@@ -1,6 +1,6 @@
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import { useState } from "react";
-import { Shifts, TeamRoles } from "@/lib/types/dbexports";
+import { ShiftWithProfile, TeamRoles } from "@/lib/types/dbexports";
 import { createShiftAction } from "../../actions/shifts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -17,7 +17,7 @@ type Props = {
   selectedDate: string | null;
   teamId: string;
   roles: TeamRoles[];
-  onShiftCreated: (newShifts: Shifts[]) => void;
+  onShiftCreated: (newShifts: ShiftWithProfile[]) => void;
 };
 const CreateShift = ({
   selectedDate,

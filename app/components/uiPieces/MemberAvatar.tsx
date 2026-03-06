@@ -4,7 +4,7 @@ import { TeamMember } from "@/lib/types/dbexports";
 type Props = {
   member?: TeamMember;
   avatarUrl?: string;
-  name?: string;
+  name?: string | null;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
 };
 

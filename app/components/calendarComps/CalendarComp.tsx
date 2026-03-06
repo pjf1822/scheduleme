@@ -12,6 +12,7 @@ import {
 } from "../../actions/busyBlocks";
 import { mapShiftsToEvents } from "@/lib/utils/shifts/ mapShiftsToEvents";
 import EventDetailModal from "../eventDetailModal/EventDetailModal";
+import { createShiftDateMap } from "@/lib/utils/shifts/createShiftDateMap";
 
 type Props = {
   busyBlocks: BusyBlock[];
@@ -24,16 +25,16 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
   const shiftEvents = mapShiftsToEvents(shifts);
   const [selectedShift, setSelectedShift] = useState<UserShift | null>(null);
 
+  const shiftDateMap = createShiftDateMap(shifts);
+
   const handleDateClick = async (info: any) => {
     const dateKey = info.dateStr;
-    const shift = shifts.find(
-      (s) => new Date(s.start_time).toLocaleDateString("en-CA") === dateKey,
-    );
-    if (shift) {
-      setSelectedShift(shift);
+    const shiftsForDay = shiftDateMap.get(dateKey);
+
+    if (shiftsForDay && shiftsForDay.length > 0) {
+      setSelectedShift(shiftsForDay[0]);
       return;
     }
-
     if (pendingDates.current.has(dateKey)) {
       return;
     }
