@@ -1,6 +1,7 @@
 import {
   fetchShiftsByDate,
   fetchShiftsByTeamId,
+  fetchShiftsForCurrentUser,
   insertShift,
   updateShiftAssignment,
 } from "../db/shifts";
@@ -30,4 +31,10 @@ export async function createShift(
 
 export async function assignShift(shiftId: string, user_id: string | null) {
   return updateShiftAssignment(shiftId, user_id);
+}
+
+export async function getCurrentUserShifts() {
+  const shifts = await fetchShiftsForCurrentUser();
+
+  return shifts ?? [];
 }

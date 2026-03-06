@@ -15,3 +15,9 @@ export type TeamRoles = Database["public"]["Tables"]["team_roles"]["Row"];
 export type Shifts = Database["public"]["Tables"]["shifts"]["Row"] & {
   profiles: Pick<Profile, "display_name" | "avatar_url"> | null;
 };
+
+export type UserShift = Shifts & {
+  profiles: Pick<Profile, "display_name" | "avatar_url"> | null;
+  teams: { name: string } | null;
+  roles: { name: string } | null;
+};

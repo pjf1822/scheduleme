@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAdminTeamData } from "@/lib/services/admin";
 import TeamScheduleCalendarComp from "../components/calendarComps/TeamScheduleCalendarComp";
 import { getTeamRoles } from "@/lib/services/teamRoles";
+import { getCurrentUserShifts } from "@/lib/services/shifts";
 
 const page = async () => {
   const supabase = await createClient();
@@ -31,7 +32,12 @@ const page = async () => {
   }
 
   const busyBlocks = await getCurrentUserBusyBlocks();
-  return <CalendarComp busyBlocks={busyBlocks} />;
+  const shifts = await getCurrentUserShifts();
+  return (
+    <div className="max-w-7xl mx-auto ">
+      <CalendarComp busyBlocks={busyBlocks} shifts={shifts} />
+    </div>
+  );
 };
 
 export default page;

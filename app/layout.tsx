@@ -32,7 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-brand-4 antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-[var(--brand-4)] antialiased`}
       >
         {user?.email && user?.user_role && (
           <Navbar userRole={user.user_role} email={user.email} />
