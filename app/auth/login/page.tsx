@@ -11,6 +11,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${location.origin}/auth/confirm`,
+      },
+    });
+
+    if (error) alert(error.message);
+  };
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -58,6 +68,10 @@ export default function LoginPage() {
       <button type="submit">Login</button>
       <button type="button" onClick={handleResetPassword}>
         Reset password
+      </button>
+
+      <button type="button" onClick={handleGoogleLogin}>
+        Continue with Google
       </button>
     </form>
   );
