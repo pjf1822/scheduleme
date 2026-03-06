@@ -38,11 +38,9 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
   const { data } = await supabase.auth.getClaims();
-
-  //ADMIN LOGIC
-
   const user = data?.claims;
 
+  //ADMIN PAGE LOGIC
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (!user) {
       return NextResponse.redirect(new URL("/auth/login", request.url));
@@ -51,7 +49,7 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
-  // IF USER NOT LOGGED IN THEN DO NOT ALLOW DASHBOARD
+  // LOGGED IN USERS BOUNCED FROM AUTH PAGES LIKE LOGIN AND SIGNUP
   if (
     user &&
     ((request.nextUrl.pathname.startsWith("/auth") &&
@@ -64,6 +62,30 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Block 2.5 - Onboarding check
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("has_onboarded")
+      .eq("id", user.sub)
+      .single();
+
+    if (
+      !profile?.has_onboarded &&
+      !request.nextUrl.pathname.startsWith("/onboarding")
+    ) {
+      return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
+
+    if (
+      profile?.has_onboarded &&
+      request.nextUrl.pathname.startsWith("/onboarding")
+    ) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
+  // IF USER NOT LOGGED IN THEN DO NOT ALLOW DASHBOARD
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/auth") &&
