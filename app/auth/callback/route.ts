@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
           console.error("Failed to accept invite:", e);
         }
       }
+      console.log(user, "the user");
       response.cookies.delete("invite_token");
     }
 
