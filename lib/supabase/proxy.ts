@@ -2,10 +2,14 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
+  let supabaseResponse = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
   const supabase = createServerClient(
@@ -50,16 +54,19 @@ export async function updateSession(request: NextRequest) {
     }
   }
   // LOGGED IN USERS BOUNCED FROM AUTH PAGES LIKE LOGIN AND SIGNUP
-  if (
-    user &&
-    ((request.nextUrl.pathname.startsWith("/auth") &&
-      !request.nextUrl.pathname.startsWith("/auth/confirm") &&
-      !request.nextUrl.pathname.startsWith("/auth/reset-password")) ||
-      request.nextUrl.pathname === "/")
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+  // if (
+  //   user &&
+  //   ((request.nextUrl.pathname.startsWith("/auth") &&
+  //     !request.nextUrl.pathname.startsWith("/auth/confirm") &&
+  //     !request.nextUrl.pathname.startsWith("/auth/reset-password")) ||
+  //     request.nextUrl.pathname === "/")
+  // ) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/dashboard";
+  //   return NextResponse.redirect(url);
+  // }
+  if (user && request.nextUrl.pathname.startsWith("/auth")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   // Block 2.5 - Onboarding check

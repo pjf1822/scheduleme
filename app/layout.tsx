@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { createClient } from "@/lib/supabase/server";
 import Navbar from "./components/layout/Navbar";
+import { headers } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,9 +25,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+  const isOnBoarding = pathname.startsWith("/onboarding");
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
-
   const user = data?.claims;
 
   return (
@@ -34,7 +37,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-[var(--brand-4)] antialiased`}
       >
-        {user?.email && user?.user_role && (
+        {user?.email && user?.user_role && !isOnBoarding && (
           <Navbar userRole={user.user_role} email={user.email} />
         )}
         {children}
