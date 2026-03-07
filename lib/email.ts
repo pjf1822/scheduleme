@@ -10,7 +10,7 @@ export async function sendInviteEmail({
   token: string;
 }) {
   const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/invite?token=${token}`;
-  console.log("📧 INVITE URL:", inviteUrl);
+  console.log("📧 INVITE URL::", inviteUrl);
   return; // skip email for now
   //   const { error } = await resend.emails.send({
   //     from: "onboarding@resend.dev", // ✅ works without a verified domain
