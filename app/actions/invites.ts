@@ -8,7 +8,6 @@ export async function createInvite(teamId: string, email: string) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // ✅ Don't pass token or expires_at — DB generates them automatically
   const { data: invite, error } = await supabase
     .from("invites")
     .insert({
@@ -19,7 +18,6 @@ export async function createInvite(teamId: string, email: string) {
     })
     .select("token") // get the generated token back
     .single();
-  console.log(invite);
 
   if (error) throw error;
 
@@ -36,6 +34,7 @@ export async function acceptInvite(token: string, userId: string) {
     .eq("accepted", false)
     .gt("expires_at", new Date().toISOString())
     .single();
+  console.log(invite, "the ivite");
 
   if (!invite) throw new Error("Invalid or expired invite");
 
@@ -44,6 +43,7 @@ export async function acceptInvite(token: string, userId: string) {
     team_id: invite.team_id,
     user_id: userId,
   });
+
   await supabase
     .from("profiles")
     .update({ has_onboarded: true })

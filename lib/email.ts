@@ -1,6 +1,12 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER, // your gmail
+    pass: process.env.GMAIL_APP_PASSWORD, // app password (not your real password)
+  },
+});
 
 export async function sendInviteEmail({
   email,
@@ -10,10 +16,9 @@ export async function sendInviteEmail({
   token: string;
 }) {
   const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/invite?token=${token}`;
-  console.log("📧 INVITE URL:", inviteUrl);
-  return; // skip email for now
-  const { error } = await resend.emails.send({
-    from: "onboarding@resend.dev", // ✅ works without a verified domain
+
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
     to: email,
     subject: "You've been invited to join a team",
     html: `
@@ -27,6 +32,4 @@ export async function sendInviteEmail({
       </div>
     `,
   });
-
-  if (error) throw new Error(`Email failed: ${error.message}`);
 }
