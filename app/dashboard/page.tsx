@@ -12,6 +12,7 @@ const page = async () => {
   const { data } = await supabase.auth.getClaims();
   const userRole = data?.claims?.user_role;
 
+  console.log(userRole, "user role baby");
   if (userRole === "admin") {
     const { busyBlocks, teamMembers, teamId, shifts } =
       await getAdminTeamData();

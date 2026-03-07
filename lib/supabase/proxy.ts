@@ -2,10 +2,14 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
+  let supabaseResponse = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
   const supabase = createServerClient(
@@ -38,11 +42,9 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
   const { data } = await supabase.auth.getClaims();
-
-  //ADMIN LOGIC
-
   const user = data?.claims;
 
+  //ADMIN PAGE LOGIC
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (!user) {
       return NextResponse.redirect(new URL("/auth/login", request.url));
@@ -51,19 +53,46 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
-  // IF USER NOT LOGGED IN THEN DO NOT ALLOW DASHBOARD
-  if (
-    user &&
-    ((request.nextUrl.pathname.startsWith("/auth") &&
-      !request.nextUrl.pathname.startsWith("/auth/confirm") &&
-      !request.nextUrl.pathname.startsWith("/auth/reset-password")) ||
-      request.nextUrl.pathname === "/")
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+  // LOGGED IN USERS BOUNCED FROM AUTH PAGES LIKE LOGIN AND SIGNUP
+  // if (
+  //   user &&
+  //   ((request.nextUrl.pathname.startsWith("/auth") &&
+  //     !request.nextUrl.pathname.startsWith("/auth/confirm") &&
+  //     !request.nextUrl.pathname.startsWith("/auth/reset-password")) ||
+  //     request.nextUrl.pathname === "/")
+  // ) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/dashboard";
+  //   return NextResponse.redirect(url);
+  // }
+  if (user && request.nextUrl.pathname.startsWith("/auth")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  // Block 2.5 - Onboarding check
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("has_onboarded")
+      .eq("id", user.sub)
+      .single();
+
+    if (
+      !profile?.has_onboarded &&
+      !request.nextUrl.pathname.startsWith("/onboarding")
+    ) {
+      return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
+
+    if (
+      profile?.has_onboarded &&
+      request.nextUrl.pathname.startsWith("/onboarding")
+    ) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
+  // IF USER NOT LOGGED IN THEN DO NOT ALLOW DASHBOARD
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/auth") &&
