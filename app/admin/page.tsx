@@ -20,7 +20,6 @@ const AdminPage = async () => {
     <div>
       <TeamMemberList teamMembers={teamMembers} />
       <InviteUsers teamId={adminMember.team_id} />
-
       <TeamRolesManager roles={roles} teamId={adminMember.team_id} />
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { createInvite } from "@/app/actions/invites";
-import React, { useState } from "react";
+import { useState } from "react";
 
 type Props = {
   teamId: string;
