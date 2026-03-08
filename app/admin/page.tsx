@@ -13,13 +13,14 @@ const AdminPage = async () => {
   const userId = data?.claims.sub;
   if (!userId) throw new Error("No user id");
 
-  const { adminMember, teamMembers } = await getTeamContextForUser(userId);
+  const { adminMember, teamMembers, teamName } =
+    await getTeamContextForUser(userId);
 
   const roles = await fetchTeamRoles(adminMember.team_id);
   return (
     <div>
       <TeamMemberList teamMembers={teamMembers} />
-      <InviteUsers teamId={adminMember.team_id} />
+      <InviteUsers teamId={adminMember.team_id} teamName={teamName} />
       <TeamRolesManager roles={roles} teamId={adminMember.team_id} />
     </div>
   );

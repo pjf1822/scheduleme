@@ -5,9 +5,10 @@ import { useState } from "react";
 
 type Props = {
   teamId: string;
+  teamName: string;
 };
 
-const InviteUsers = ({ teamId }: Props) => {
+const InviteUsers = ({ teamId, teamName }: Props) => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -20,7 +21,7 @@ const InviteUsers = ({ teamId }: Props) => {
     setErrorMsg("");
 
     try {
-      await createInvite(teamId, email);
+      await createInvite(teamId, email, teamName);
       setStatus("success");
       setEmail("");
     } catch (e: any) {
