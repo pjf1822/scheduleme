@@ -2,7 +2,11 @@
 import { sendInviteEmail } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 
-export async function createInvite(teamId: string, email: string) {
+export async function createInvite(
+  teamId: string,
+  email: string,
+  teamName: string,
+) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -14,14 +18,13 @@ export async function createInvite(teamId: string, email: string) {
       team_id: teamId,
       email,
       invited_by: user!.id,
-      // accepted defaults to false, expires_at defaults to now()+7days
     })
-    .select("token") // get the generated token back
+    .select("token")
     .single();
 
   if (error) throw error;
 
-  await sendInviteEmail({ email, token: invite.token });
+  await sendInviteEmail({ email, token: invite.token, teamName });
 }
 export async function acceptInvite(token: string, userId: string) {
   const supabase = await createClient();

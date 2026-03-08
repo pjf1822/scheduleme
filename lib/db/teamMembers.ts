@@ -6,7 +6,14 @@ export async function getTeamContextForUser(userId: string) {
   // 1️⃣ find user's team
   const { data: membership, error: memberError } = await supabase
     .from("team_members")
-    .select("*")
+    .select(
+      `
+    *,
+    teams (
+      name
+    )
+  `,
+    )
     .eq("user_id", userId)
     .single();
 
@@ -28,6 +35,8 @@ export async function getTeamContextForUser(userId: string) {
   const teamUserIds = teamMembers.map((m) => m.user_id);
 
   return {
+    teamName: membership.teams.name,
+
     adminMember: membership,
     teamMembers,
     teamUserIds: teamUserIds,
