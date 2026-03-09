@@ -34,7 +34,7 @@ const page = async () => {
   const busyBlocks = await getCurrentUserBusyBlocks();
   const shifts = await getCurrentUserShifts();
   return (
-    <div className="max-w-7xl mx-auto ">
+    <div className="max-w-7xl mx-auto min-h-screen flex flex-col ">
       <CalendarComp busyBlocks={busyBlocks} shifts={shifts} />
     </div>
   );

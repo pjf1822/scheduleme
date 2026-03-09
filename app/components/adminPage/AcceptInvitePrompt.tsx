@@ -4,9 +4,10 @@ import { createClient } from "@/lib/supabase/client";
 
 type Props = {
   token: string;
+  teamName: string;
 };
 
-export default function AcceptInvitePrompt({ token }: Props) {
+export default function AcceptInvitePrompt({ token, teamName }: Props) {
   const handleAccept = async () => {
     document.cookie = `invite_token=${token}; path=/; max-age=600; SameSite=Lax`;
 
@@ -25,7 +26,7 @@ export default function AcceptInvitePrompt({ token }: Props) {
         <div className="text-center">
           <h1 className="text-2xl font-semibold">You've been invited!</h1>
           <p className="text-gray-500 mt-2">
-            You've been invited to join{" "}
+            You've been invited to join {teamName}
             {/* <span className="font-medium text-black">{teamName}</span> */}
           </p>
         </div>

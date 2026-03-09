@@ -5,7 +5,9 @@ import { completeOnboardingAction } from "../actions/onboarding";
 import { useRouter } from "next/navigation";
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<"choose" | "team" | "roles" | "member">(
+    "choose",
+  );
   const [teamName, setTeamName] = useState("");
   const [roles, setRoles] = useState<{ name: string; color: string }[]>([
     { name: "", color: "#3b82f6" },
@@ -23,8 +25,13 @@ export default function OnboardingPage() {
     setRoles((prev) => prev.map((r, i) => (i === index ? { ...r, color } : r)));
   };
 
-  const addRole = () =>
+  const addRole = () => {
+    const lastRole = roles[roles.length - 1];
+
+    if (!lastRole.name.trim()) return;
+
     setRoles((prev) => [...prev, { name: "", color: "#3b82f6" }]);
+  };
   const removeRole = (index: number) => {
     setRoles((prev) => prev.filter((_, i) => i !== index));
   };
@@ -53,8 +60,32 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md p-8 border rounded-xl space-y-6">
+        {step === "choose" && (
+          <>
+            <h1 className="text-2xl font-bold text-center">
+              Welcome to ScheduleMe
+            </h1>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => setStep("team")}
+                className="w-full bg-black text-white rounded-lg p-3"
+              >
+                Create a Team
+              </button>
+
+              <button
+                onClick={() => setStep("member")}
+                className="w-full border rounded-lg p-3"
+              >
+                Join as a team member
+              </button>
+            </div>
+          </>
+        )}
+
         {/* STEP 1 — TEAM NAME */}
-        {step === 1 && (
+        {step === "team" && (
           <>
             <h1 className="text-2xl font-bold">Create your team</h1>
 
@@ -67,16 +98,35 @@ export default function OnboardingPage() {
 
             <button
               disabled={!teamName.trim()}
-              onClick={() => setStep(2)}
+              onClick={() => setStep("roles")}
               className="w-full bg-black text-white rounded-lg p-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue
             </button>
           </>
         )}
+        {/* STEP 1 B — TEAM NAME */}
+
+        {step === "member" && (
+          <>
+            <h1 className="text-2xl font-bold text-center">Join a Team</h1>
+
+            <p className="text-gray-600 text-center">
+              To join a team, ask your team admin to send you an invite. You’ll
+              receive an email with a link to join.
+            </p>
+
+            <button
+              onClick={() => setStep("choose")}
+              className="w-full border rounded-lg p-3"
+            >
+              Back
+            </button>
+          </>
+        )}
 
         {/* STEP 2 — ROLES */}
-        {step === 2 && (
+        {step === "roles" && (
           <>
             <h1 className="text-2xl font-bold">Create roles</h1>
 
@@ -109,10 +159,7 @@ export default function OnboardingPage() {
                 </div>
               ))}
 
-              <button
-                onClick={addRole}
-                className="text-sm text-blue-600 hover:underline"
-              >
+              <button onClick={addRole} className="btn ">
                 + Add role
               </button>
             </div>

@@ -1,4 +1,3 @@
-import { BusyBlock } from "@/lib/types/dbexports";
 import { getTeamContextForUser } from "../db/teamMembers";
 import { createClient } from "../supabase/server";
 import { getBusyBlocksByUserIds } from "./busyBlocks";
