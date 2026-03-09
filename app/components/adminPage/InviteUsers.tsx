@@ -31,10 +31,10 @@ const InviteUsers = ({ teamId, teamName }: Props) => {
   };
 
   return (
-    <div className="border rounded-lg p-4 flex flex-col gap-3">
-      <p className="font-medium">Invite a team member</p>
+    <div className="card bg-base-100 w-96 shadow-sm border rounded-lg p-4 flex flex-col gap-3">
+      <p className="font-medium card-title">Invite a team member</p>
 
-      <div className="flex gap-2">
+      <div className="card-body flex gap-2">
         <input
           type="email"
           placeholder="Enter email address"
@@ -44,12 +44,12 @@ const InviteUsers = ({ teamId, teamName }: Props) => {
             setStatus("idle");
           }}
           onKeyDown={(e) => e.key === "Enter" && handleInvite()}
-          className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)]"
+          className="input"
         />
         <button
           onClick={handleInvite}
           disabled={status === "loading" || !email}
-          className="px-4 py-2 rounded-md bg-[var(--brand-1)] text-white text-sm font-medium disabled:opacity-50"
+          className="btn w-32 rounded-full"
         >
           {status === "loading" ? "Sending..." : "Send Invite"}
         </button>

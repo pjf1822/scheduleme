@@ -20,10 +20,7 @@ const Navbar = ({
 
         <div className="flex items-center gap-4 text-sm">
           {userRole === "admin" && (
-            <Link
-              href="/admin"
-              className="text-sm text-muted-foreground hover:text-black"
-            >
+            <Link href="/admin" className="btn w-32 rounded-full">
               Admin
             </Link>
           )}
