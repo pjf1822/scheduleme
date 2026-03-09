@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/dashboard";
 
-  console.log(code, "code", next, "next", type, "type");
   const supabase = await createClient();
   const inviteToken = request.cookies.get("invite_token")?.value;
 
