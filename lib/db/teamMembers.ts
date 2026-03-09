@@ -36,9 +36,19 @@ export async function getTeamContextForUser(userId: string) {
 
   return {
     teamName: membership.teams.name,
-
     adminMember: membership,
     teamMembers,
     teamUserIds: teamUserIds,
   };
+}
+
+export async function addTeamMember(teamId: string, userId: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("team_members").insert({
+    team_id: teamId,
+    user_id: userId,
+  });
+
+  if (error) throw error;
 }

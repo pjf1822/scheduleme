@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { acceptInvite } from "@/app/actions/invites";
 import { redirect } from "next/navigation";
 import AcceptInvitePrompt from "../components/adminPage/AcceptInvitePrompt";
+import { getInviteByToken } from "@/lib/db/invites";
 
 type Props = {
   searchParams: Promise<{ token?: string }>;
@@ -10,19 +11,12 @@ type Props = {
 export default async function InvitePage({ searchParams }: Props) {
   const { token } = await searchParams;
 
-  if (!token) redirect("/");
+  if (!token) redirect("/login");
 
   const supabase = await createClient();
 
-  const { data: invite } = await supabase
-    .from("invites")
-    .select("*")
-    .eq("token", token)
-    .eq("accepted", false)
-    .gt("expires_at", new Date().toISOString())
-    .single();
+  const invite = await getInviteByToken(token);
 
-  console.log(invite);
   if (!invite) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -45,5 +39,5 @@ export default async function InvitePage({ searchParams }: Props) {
     redirect("/dashboard");
   }
 
-  return <AcceptInvitePrompt token={token} />;
+  return <AcceptInvitePrompt token={token} teamName={invite.team_name} />;
 }
