@@ -4,16 +4,13 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", request.nextUrl.pathname);
-  const pathname = request.nextUrl.pathname;
 
   let supabaseResponse = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
-  if (pathname.startsWith("/auth/callback")) {
-    return supabaseResponse;
-  }
+
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
   const supabase = createServerClient(
