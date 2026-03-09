@@ -14,5 +14,9 @@ export default function LogoutButton() {
     router.refresh(); // important for SSR
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <button className="btn w-32 rounded-full" onClick={handleLogout}>
+      Logout
+    </button>
+  );
 }

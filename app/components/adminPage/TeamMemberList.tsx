@@ -8,28 +8,26 @@ type Props = {
 const TeamMemberList = ({ teamMembers }: Props) => {
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Team Members</h1>
+      <h1 className="text-2xl font-semibold pb-2">Team Members</h1>
 
-      <div className="grid gap-3">
+      <ul className="list bg-base-100 rounded-box border border-base-300">
         {teamMembers.map((member) => (
-          <div
-            key={member.user_id}
-            className="flex items-center gap-3 border rounded-lg p-3 bg-[var(--brand-4)]"
-          >
+          <li key={member.user_id} className="list-row items-center">
             <MemberAvatar
               avatarUrl={member?.profiles?.avatar_url ?? undefined}
               name={member?.profiles?.display_name}
               size="lg"
             />
 
-            <div>
-              <p className="font-medium">
+            <div className="list-col-grow">
+              <div className="font-medium">
                 {member.profiles?.display_name ?? "Unknown"}
-              </p>
+              </div>
+              <div className="text-sm opacity-60">Team Member</div>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };

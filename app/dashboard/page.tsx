@@ -12,7 +12,6 @@ const page = async () => {
   const { data } = await supabase.auth.getClaims();
   const userRole = data?.claims?.user_role;
 
-  console.log(userRole, "user role baby");
   if (userRole === "admin") {
     const { busyBlocks, teamMembers, teamId, shifts } =
       await getAdminTeamData();
@@ -20,7 +19,7 @@ const page = async () => {
     const roles = await getTeamRoles(teamId);
 
     return (
-      <div className="max-w-7xl mx-auto ">
+      <div className="max-w-7xl mx-auto min-h-screen ">
         <TeamScheduleCalendarComp
           busyBlocks={busyBlocks}
           teamMembers={teamMembers}
