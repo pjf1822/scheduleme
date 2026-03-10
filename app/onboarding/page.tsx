@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { completeOnboardingAction } from "../actions/onboarding";
 import { useRouter } from "next/navigation";
+import LogoutButton from "../components/layout/LogoutButton";
 
 export default function OnboardingPage() {
   const [step, setStep] = useState<"choose" | "team" | "roles" | "member">(
@@ -187,6 +188,7 @@ export default function OnboardingPage() {
             </button>
           </>
         )}
+        <LogoutButton />
       </div>
     </div>
   );

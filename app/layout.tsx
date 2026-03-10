@@ -33,7 +33,6 @@ export default async function RootLayout({
   const user = data?.claims;
   const hideNavbar = pathname === "/" || pathname.startsWith("/auth");
 
-  console.log(pathname);
   return (
     <html lang="en">
       <body
