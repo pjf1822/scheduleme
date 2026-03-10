@@ -4,29 +4,41 @@ import { MemberAvatar } from "../uiPieces/MemberAvatar";
 
 type Props = {
   teamMembers: TeamMember[];
+  adminUserId: string | null;
 };
-const TeamMemberList = ({ teamMembers }: Props) => {
+const TeamMemberList = ({ teamMembers, adminUserId }: Props) => {
   return (
     <div>
       <h1 className="text-2xl font-semibold pb-2">Team Members</h1>
 
       <ul className="list bg-base-100 rounded-box border border-base-300">
-        {teamMembers.map((member) => (
-          <li key={member.user_id} className="list-row items-center">
-            <MemberAvatar
-              avatarUrl={member?.profiles?.avatar_url ?? undefined}
-              name={member?.profiles?.display_name}
-              size="lg"
-            />
+        {teamMembers.map((member) => {
+          const isAdmin = member.user_id === adminUserId;
 
-            <div className="list-col-grow">
-              <div className="font-medium">
-                {member.profiles?.display_name ?? "Unknown"}
+          return (
+            <li key={member.id} className="list-row items-center">
+              <MemberAvatar
+                avatarUrl={member?.profiles?.avatar_url ?? undefined}
+                name={member?.profiles?.display_name}
+                size="lg"
+              />
+
+              <div className="list-col-grow">
+                <div className="font-medium flex items-center gap-2">
+                  {member.profiles?.display_name ?? "Unknown"}
+
+                  {isAdmin && (
+                    <span className="text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-300">
+                      Admin
+                    </span>
+                  )}
+                </div>
+
+                <div className="text-sm opacity-60">Team Member</div>
               </div>
-              <div className="text-sm opacity-60">Team Member</div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

@@ -19,7 +19,10 @@ const AdminPage = async () => {
   const roles = await fetchTeamRoles(adminMember.team_id);
   return (
     <div className="max-w-7xl mx-auto flex flex-col  justify-between px-0 py-3 min-h-screen">
-      <TeamMemberList teamMembers={teamMembers} />
+      <TeamMemberList
+        teamMembers={teamMembers}
+        adminUserId={adminMember.user_id}
+      />
       <InviteUsers teamId={adminMember.team_id} teamName={teamName} />
       <TeamRolesManager roles={roles} teamId={adminMember.team_id} />
     </div>

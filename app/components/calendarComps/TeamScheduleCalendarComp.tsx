@@ -83,6 +83,7 @@ const TeamScheduleCalendarComp = ({
         eventInteractive={false}
         eventBackgroundColor="transparent"
         eventBorderColor="transparent"
+        dayMaxEvents={3}
         dayCellContent={(arg) => {
           const dateStr = arg.date.toISOString().split("T")[0];
           const busyCount = new Set(
@@ -100,7 +101,6 @@ const TeamScheduleCalendarComp = ({
               dateStr,
           );
 
-          console.log();
           return (
             <div className="flex justify-between items-center w-full px-1">
               <div className="flex gap-0.5 flex-wrap">

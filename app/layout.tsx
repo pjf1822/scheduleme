@@ -33,12 +33,13 @@ export default async function RootLayout({
   const user = data?.claims;
   const hideNavbar = pathname === "/" || pathname.startsWith("/auth");
 
+  console.log(pathname);
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-[var(--brand-4)] antialiased`}
       >
-        {user?.email && user?.user_role && !isOnBoarding && hideNavbar && (
+        {user?.email && user?.user_role && !isOnBoarding && !hideNavbar && (
           <Navbar userRole={user.user_role} email={user.email} />
         )}
         {children}
