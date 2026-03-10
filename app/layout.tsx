@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import Navbar from "./components/layout/Navbar";
 import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -86,6 +87,15 @@ export default async function RootLayout({
           }}
         />
       </head>
+
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-48B33FX3C3');
+    `}
+      </Script>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-[var(--brand-4)] antialiased`}
       >
