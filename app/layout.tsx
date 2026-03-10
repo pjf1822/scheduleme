@@ -93,6 +93,7 @@ export default async function RootLayout({
           <Navbar userRole={user.user_role} email={user.email} />
         )}
         {children}
+        <Analytics />
       </body>
     </html>
   );
