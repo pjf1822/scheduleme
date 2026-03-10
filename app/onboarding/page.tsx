@@ -194,7 +194,9 @@ export default function OnboardingPage() {
             </button>
           </>
         )}
-        <LogoutButton />
+        <div className="flex justify-center">
+          <LogoutButton />
+        </div>
       </div>
     </div>
   );
