@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 px-6 text-center dark:bg-black">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-brand-3 px-6 text-center ">
       <div className="max-w-xl space-y-8">
         <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
           ScheduleMe
@@ -18,7 +18,7 @@ export default function Home() {
         </div>
 
         <p className="text-sm text-zinc-500 dark:text-zinc-500">
-          A schedule manager
+          A straightforward schedule manager
         </p>
       </div>
     </div>
