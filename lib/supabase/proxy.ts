@@ -83,8 +83,10 @@ export async function updateSession(request: NextRequest) {
       .single();
 
     if (
+      user &&
       !profile?.has_onboarded &&
-      !request.nextUrl.pathname.startsWith("/onboarding")
+      !request.nextUrl.pathname.startsWith("/onboarding") &&
+      !request.nextUrl.pathname.startsWith("/invite")
     ) {
       return NextResponse.redirect(new URL("/onboarding", request.url));
     }
