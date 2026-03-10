@@ -22,6 +22,7 @@ type Props = {
   onShiftCreated: (newShifts: ShiftWithProfile[]) => void;
   onShiftAssigned: (updatedShift: ShiftWithProfile) => void;
   unavailableMembers: TeamMember[];
+  onShiftDeleted: (shiftId: string) => void;
 };
 
 const AvailabilityModal = ({
@@ -34,10 +35,20 @@ const AvailabilityModal = ({
   shifts,
   onShiftCreated,
   onShiftAssigned,
+  onShiftDeleted,
 }: Props) => {
   return (
-    <Dialog open={!!selectedDate} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-6xl max-h-[90vh] overflow-y-auto bg-[var(--brand-1)] border border-[color-mix(in_srgb,var(--brand-3)_40%,transparent)] shadow-xl">
+    <Dialog open={!!selectedDate} onOpenChange={onClose} modal={false}>
+      <DialogContent
+        className=" 
+     fixed     fixed left-[50%] top-1/2
+ -translate-x-1/2 -translate-y-1/2
+
+   max-w-[95vw]
+    sm:max-w-6xl
+    max-h-[90vh]
+     max-h-[90vh] overflow-y-auto bg-[var(--brand-1)] border border-[color-mix(in_srgb,var(--brand-3)_40%,transparent)] shadow-xl"
+      >
         <DialogHeader>
           <DialogTitle className="text-center text-white">
             {selectedDate}
@@ -51,6 +62,7 @@ const AvailabilityModal = ({
         />
         {shifts.length > 0 && (
           <AddMemberToRole
+            onShiftDeleted={onShiftDeleted}
             shifts={shifts}
             roles={roles}
             availableMembers={availableMembers}

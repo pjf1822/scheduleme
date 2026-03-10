@@ -1,4 +1,5 @@
 import {
+  deleteShift,
   fetchShiftsByDate,
   fetchShiftsByTeamId,
   fetchShiftsByUserId,
@@ -43,4 +44,8 @@ export async function getCurrentUserShifts() {
   if (!userId) return [];
 
   return fetchShiftsByUserId(userId);
+}
+
+export async function removeShift(shiftId: string) {
+  return deleteShift(shiftId);
 }

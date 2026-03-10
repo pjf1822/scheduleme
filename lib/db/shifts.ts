@@ -111,3 +111,11 @@ export async function fetchShiftsByUserId(userId: string) {
 
   return data;
 }
+
+export async function deleteShift(shiftId: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("shifts").delete().eq("id", shiftId);
+
+  if (error) throw new Error(error.message);
+}
