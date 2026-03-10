@@ -68,7 +68,7 @@ const TeamScheduleCalendarComp = ({
   };
 
   return (
-    <div>
+    <div className="px-2 sm:px-0">
       <h2>Team Schedule</h2>
 
       <FullCalendar

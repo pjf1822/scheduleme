@@ -35,7 +35,7 @@ export default function TeamRolesManager({ roles, teamId }: Props) {
           type="color"
           value={newColor}
           onChange={(e) => setNewColor(e.target.value)}
-          className="w-12 h-10 border"
+          className="w-12 h-10 border  bg-[var(--brand-3)]"
         />
         <button
           disabled={newRole === ""}
@@ -77,7 +77,7 @@ export default function TeamRolesManager({ roles, teamId }: Props) {
                     type="color"
                     value={editColor}
                     onChange={(e) => setEditColor(e.target.value)}
-                    className="w-10 h-8"
+                    className="w-10 h-8 bg-[var(--brand-3)]"
                   />
                 </>
               ) : (

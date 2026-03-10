@@ -12,7 +12,7 @@ const Navbar = ({
   return (
     <nav className="w-full border-b bg-brand-2 mb-4">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
-        <div className="flex items-center justify-center sm:justify-start gap-6 text-center">
+        <div className="flex flex-col items-center sm:flex-row sm:items-center sm:justify-start gap-2 sm:gap-6 text-center sm:text-left">
           <Link href="/dashboard" className="flex items-center">
             <Image
               src="/logo.png"
