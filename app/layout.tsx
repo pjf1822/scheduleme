@@ -60,6 +60,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preconnect"
+          href="https://seaxrzwhaxqdrjdsnbfc.supabase.co"
+        />
+        <link rel="preconnect" href="https://accounts.google.com" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-[var(--brand-4)] antialiased`}
       >
