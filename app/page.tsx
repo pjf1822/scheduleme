@@ -48,6 +48,7 @@ export default function Home() {
             width={200}
             height={90}
             priority
+            unoptimized
             className="mx-auto"
           />
           <p className="text-sm text-muted-foreground">
