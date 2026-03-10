@@ -22,7 +22,7 @@ export function MemberAvatar({ member, avatarUrl, name, size = "md" }: Props) {
 
   return (
     <Avatar className={sizeClasses[size]}>
-      <AvatarImage src={src} />
+      <AvatarImage src={src} loading="lazy" referrerPolicy="no-referrer" />
       <AvatarFallback>{displayName?.slice(0, 2)}</AvatarFallback>
     </Avatar>
   );

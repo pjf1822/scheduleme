@@ -101,7 +101,7 @@ export async function fetchShiftsByUserId(userId: string) {
       *,
       profiles:assigned_user_id(display_name, avatar_url),
       teams:team_id(name),
-       roles:role_id(name)
+       roles:role_id(name,color)
     `,
     )
     .eq("assigned_user_id", userId)
