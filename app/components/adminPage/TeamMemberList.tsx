@@ -1,5 +1,4 @@
 import { TeamMember } from "@/lib/types/dbexports";
-import React from "react";
 import { MemberAvatar } from "../uiPieces/MemberAvatar";
 
 type Props = {
@@ -11,7 +10,7 @@ const TeamMemberList = ({ teamMembers, adminUserId }: Props) => {
     <div>
       <h1 className="text-2xl font-semibold pb-2">Team Members</h1>
 
-      <ul className="list bg-base-100 rounded-box border border-base-300">
+      <ul className="list bg-[var(--brand-3)] rounded-box border border-[var(--brand-1)] border-3">
         {teamMembers.map((member) => {
           const isAdmin = member.user_id === adminUserId;
 

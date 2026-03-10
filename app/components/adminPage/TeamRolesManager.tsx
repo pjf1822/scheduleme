@@ -19,7 +19,7 @@ export default function TeamRolesManager({ roles, teamId }: Props) {
   const [editColor, setEditColor] = useState("#000000");
 
   return (
-    <div className="max-w-xl space-y-6">
+    <div className="max-w-xl bg-[var(--brand-3)] space-y-6 border border-[var(--brand-1)] border-3 rounded-box mt-4 p-2">
       <h1 className="text-xl font-semibold pt-8">Team Roles</h1>
 
       {/* Create */}

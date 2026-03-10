@@ -31,7 +31,7 @@ const InviteUsers = ({ teamId, teamName }: Props) => {
   };
 
   return (
-    <div className="card bg-base-100 w-96 shadow-sm border rounded-lg p-4 flex flex-col gap-3">
+    <div className="card bg-[var(--brand-3)] w-96 shadow-sm rounded-lg p-4 flex flex-col gap-3 border border-[var(--brand-1)] border-3 mt-4">
       <p className="font-medium card-title">Invite a team member</p>
 
       <div className="card-body flex gap-2">
