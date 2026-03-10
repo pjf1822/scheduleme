@@ -66,7 +66,10 @@ export async function updateSession(request: NextRequest) {
   //   url.pathname = "/dashboard";
   //   return NextResponse.redirect(url);
   // }
-  if (user && request.nextUrl.pathname.startsWith("/auth")) {
+  if (
+    (user && request.nextUrl.pathname.startsWith("/auth")) ||
+    request.nextUrl.pathname === "/"
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
