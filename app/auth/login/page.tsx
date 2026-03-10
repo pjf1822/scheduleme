@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -23,12 +24,14 @@ export default function LoginPage() {
       <Card className="w-full max-w-md text-center bg-[var(--brand-4)] shadow-lg">
         <CardContent className="space-y-6 p-10">
           <div className="space-y-2">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Welcome back
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Sign in to your account
-            </p>
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={200}
+              height={90}
+              priority
+              className="mx-auto"
+            />
           </div>
 
           <Button
@@ -60,10 +63,6 @@ export default function LoginPage() {
             </svg>
             Continue with Google
           </Button>
-
-          <p className="text-xs text-muted-foreground">
-            By continuing you agree to our terms and privacy policy.
-          </p>
         </CardContent>
       </Card>
     </div>

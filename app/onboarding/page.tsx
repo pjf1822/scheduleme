@@ -4,6 +4,7 @@ import { useState } from "react";
 import { completeOnboardingAction } from "../actions/onboarding";
 import { useRouter } from "next/navigation";
 import LogoutButton from "../components/layout/LogoutButton";
+import Image from "next/image";
 
 export default function OnboardingPage() {
   const [step, setStep] = useState<"choose" | "team" | "roles" | "member">(
@@ -61,6 +62,14 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md p-8 border rounded-xl space-y-6">
+        <Image
+          src="/logo.png"
+          alt="Logo"
+          width={200}
+          height={90}
+          priority
+          className="mx-auto"
+        />{" "}
         {step === "choose" && (
           <>
             <h1 className="text-2xl font-bold text-center">
@@ -84,7 +93,6 @@ export default function OnboardingPage() {
             </div>
           </>
         )}
-
         {/* STEP 1 — TEAM NAME */}
         {step === "team" && (
           <>
@@ -107,7 +115,6 @@ export default function OnboardingPage() {
           </>
         )}
         {/* STEP 1 B — TEAM NAME */}
-
         {step === "member" && (
           <>
             <h1 className="text-2xl font-bold text-center">Join a Team</h1>
@@ -125,7 +132,6 @@ export default function OnboardingPage() {
             </button>
           </>
         )}
-
         {/* STEP 2 — ROLES */}
         {step === "roles" && (
           <>

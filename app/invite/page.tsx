@@ -3,6 +3,7 @@ import { acceptInvite } from "@/app/actions/invites";
 import { redirect } from "next/navigation";
 import AcceptInvitePrompt from "../components/adminPage/AcceptInvitePrompt";
 import { getInviteByToken } from "@/lib/db/invites";
+import Image from "next/image";
 
 type Props = {
   searchParams: Promise<{ token?: string }>;
@@ -21,6 +22,14 @@ export default async function InvitePage({ searchParams }: Props) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={200}
+            height={90}
+            priority
+            className="mx-auto"
+          />{" "}
           <h1 className="text-2xl font-semibold">Invalid Invite</h1>
           <p className="text-gray-500 mt-2">
             This invite is invalid or has expired.
