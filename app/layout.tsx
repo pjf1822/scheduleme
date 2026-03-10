@@ -64,8 +64,26 @@ export default async function RootLayout({
         <link
           rel="preconnect"
           href="https://seaxrzwhaxqdrjdsnbfc.supabase.co"
+          crossOrigin=""
         />
-        <link rel="preconnect" href="https://accounts.google.com" />
+        <link
+          rel="preconnect"
+          href="https://accounts.google.com"
+          crossOrigin=""
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "ScheduleMe",
+              applicationCategory: "BusinessApplication",
+              operatingSystem: "Web",
+              url: "https://scheduleme.live",
+            }),
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-[var(--brand-4)] antialiased`}
