@@ -49,7 +49,9 @@ const CreateShift = ({
   return (
     <Card className=" mt-0 py-2 max-w-xl mx-auto w-full gap-2 bg-[var(--brand-4)] border border-[var(--brand-3)] border-4 ">
       <CardHeader className="pb-0">
-        <CardTitle className="text-sm font-medium">Create Shifts</CardTitle>
+        <CardTitle className="text-sm font-medium text-center">
+          Create Shifts
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <div className="grid  grid-cols-2 gap-2">
@@ -70,7 +72,7 @@ const CreateShift = ({
               </SelectContent>
             </Select>
           </div>
-          <div>
+          <div className="justify-self-center">
             <Label className="pb-2">Quantity</Label>
 
             <Select

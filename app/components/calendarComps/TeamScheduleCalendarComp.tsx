@@ -9,7 +9,9 @@ import {
   TeamMember,
   TeamRoles,
 } from "@/lib/types/dbexports";
-import { useMemo, useState } from "react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+
+import { useMemo, useRef, useState } from "react";
 import AvailabilityModal from "../availModalComponents/AvailabilityModal";
 import { createBlockFromDate } from "@/lib/utils/dates/createBlockFromDate";
 import { getShiftsByDateAction } from "../../actions/shifts";
@@ -32,11 +34,16 @@ const TeamScheduleCalendarComp = ({
   shifts: initialShifts,
   roles,
 }: Props) => {
+  const [initialView] = useState(() => {
+    if (typeof window === "undefined") return "dayGridMonth";
+    return window.innerWidth < 768 ? "dayGridWeek" : "dayGridMonth";
+  });
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [calendarShifts, setCalendarShifts] =
     useState<ShiftWithProfile[]>(initialShifts);
   const [modalShifts, setModalShifts] = useState<ShiftWithProfile[]>([]);
 
+  const calendarRef = useRef<FullCalendar | null>(null);
   const events = useMemo(
     () => [
       ...convertShiftsForEventCalendar(calendarShifts, roles),
@@ -53,21 +60,24 @@ const TeamScheduleCalendarComp = ({
   );
 
   const handleDateClick = async (info: any) => {
-    const { start_time, end_time } = createBlockFromDate(info.dateStr);
+    const dateStr = info.dateStr.split("T")[0];
+    const { start_time, end_time } = createBlockFromDate(dateStr);
     const dayShifts = await getShiftsByDateAction(teamId, start_time, end_time);
     setModalShifts(dayShifts);
     setSelectedDate(info.dateStr);
   };
+
   return (
     <div>
       <h2>Team Schedule</h2>
 
       <FullCalendar
+        ref={calendarRef}
         plugins={[dayGridPlugin, interactionPlugin]}
         fixedWeekCount={false}
-        initialView="dayGridMonth"
+        initialView={initialView}
         showNonCurrentDates={false}
-        height="auto"
+        height={initialView === "dayGridWeek" ? 500 : "auto"}
         dateClick={handleDateClick}
         events={events}
         eventInteractive={false}
@@ -84,7 +94,13 @@ const TeamScheduleCalendarComp = ({
               )
               .map((block) => block.user_id),
           ).size;
+          const dayShifts = calendarShifts.filter(
+            (shift) =>
+              new Date(shift.start_time).toISOString().split("T")[0] ===
+              dateStr,
+          );
 
+          console.log();
           return (
             <div className="flex justify-between items-center w-full px-1">
               <div className="flex gap-0.5 flex-wrap">
@@ -95,6 +111,29 @@ const TeamScheduleCalendarComp = ({
                 ))}
               </div>
               <span>{arg.dayNumberText}</span>
+              {initialView === "dayGridWeek" &&
+                dayShifts
+                  .filter((shift) => shift.assigned_user_id)
+                  .map((shift) => {
+                    const role = roles.find((r) => r.id === shift.role_id);
+                    return (
+                      <div key={shift.id} className="flex items-center gap-1">
+                        {/* {role?.color && (
+                          <span
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{ backgroundColor: role.color }}
+                          />
+                        )} */}
+                        {/* {shift.assigned_user_id && (
+                          <MemberAvatar
+                            avatarUrl={shift.profiles?.avatar_url ?? undefined}
+                            name={shift.profiles?.display_name}
+                            size="sm"
+                          />
+                        )} */}
+                      </div>
+                    );
+                  })}
             </div>
           );
         }}
@@ -112,11 +151,13 @@ const TeamScheduleCalendarComp = ({
                     style={{ backgroundColor: roleColor }}
                   />
                 )}
-                <MemberAvatar
-                  avatarUrl={arg.event.extendedProps.avatarUrl}
-                  name={arg.event.title}
-                  size="lg"
-                />
+                {initialView !== "dayGridWeek" && (
+                  <MemberAvatar
+                    avatarUrl={arg.event.extendedProps.avatarUrl}
+                    name={arg.event.title}
+                    size="lg"
+                  />
+                )}
                 <span className="text-xs truncate">{arg.event.title}</span>
               </div>
             );
@@ -140,7 +181,13 @@ const TeamScheduleCalendarComp = ({
                 selectedDate,
           ),
         )}
-        onClose={() => setSelectedDate(null)}
+        onClose={() => {
+          setSelectedDate(null);
+
+          setTimeout(() => {
+            calendarRef.current?.getApi().updateSize();
+          }, 0);
+        }}
         teamId={teamId}
         roles={roles}
         shifts={modalShifts}
@@ -153,6 +200,12 @@ const TeamScheduleCalendarComp = ({
             prev.map((s) => (s.id === updatedShift.id ? updatedShift : s));
           setModalShifts(update);
           setCalendarShifts(update);
+        }}
+        onShiftDeleted={(shiftId) => {
+          const remove = (prev: ShiftWithProfile[]) =>
+            prev.filter((s) => s.id !== shiftId);
+          setModalShifts(remove);
+          setCalendarShifts(remove);
         }}
       />
     </div>

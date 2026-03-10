@@ -110,6 +110,10 @@
   position: relative !important;
   opacity: 0.9;
 }
+/* body[data-scroll-locked] {
+  margin-right: 0 !important;
+  overflow: hidden !important;
+} */
 
 .busy-x {
   position: absolute;

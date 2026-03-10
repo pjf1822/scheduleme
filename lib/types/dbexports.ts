@@ -23,5 +23,5 @@ export type ShiftWithProfile = Shift & {
 };
 export type UserShift = ShiftWithProfile & {
   teams: { name: string } | null;
-  roles: { name: string } | null;
+  roles: { name: string; color: string | null };
 };

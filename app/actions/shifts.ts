@@ -4,6 +4,7 @@ import {
   assignShift,
   createShift,
   getShiftsByDate,
+  removeShift,
 } from "@/lib/services/shifts";
 
 export async function getShiftsByDateAction(
@@ -30,4 +31,8 @@ export async function assignShiftAction(
 ) {
   const shift = await assignShift(shiftId, user_id);
   return shift;
+}
+
+export async function deleteShiftAction(shiftId: string) {
+  await removeShift(shiftId);
 }

@@ -101,7 +101,7 @@ export async function fetchShiftsByUserId(userId: string) {
       *,
       profiles:assigned_user_id(display_name, avatar_url),
       teams:team_id(name),
-       roles:role_id(name)
+       roles:role_id(name,color)
     `,
     )
     .eq("assigned_user_id", userId)
@@ -110,4 +110,12 @@ export async function fetchShiftsByUserId(userId: string) {
   if (error) throw error;
 
   return data;
+}
+
+export async function deleteShift(shiftId: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("shifts").delete().eq("id", shiftId);
+
+  if (error) throw new Error(error.message);
 }

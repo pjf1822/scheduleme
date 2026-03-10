@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
@@ -17,17 +19,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4 bg-[var(--brand-2)]">
-      <div className="card w-full max-w-md bg-[var(--brand-4)] shadow-xl border border-base-300">
-        <div className="card-body gap-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold">Welcome back</h1>
-            <p className="text-sm opacity-60 mt-1">Sign in to your account</p>
+    <div className="flex min-h-screen items-center justify-center px-6  bg-[var(--brand-3)]">
+      <Card className="w-full max-w-md text-center bg-[var(--brand-4)] shadow-lg">
+        <CardContent className="space-y-6 p-10">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Welcome back
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Sign in to your account
+            </p>
           </div>
 
-          <button
+          <Button
+            size="lg"
+            className="w-full flex items-center gap-2"
             onClick={handleGoogleLogin}
-            className="btn btn-outline w-full flex gap-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -52,13 +59,13 @@ export default function LoginPage() {
               />
             </svg>
             Continue with Google
-          </button>
+          </Button>
 
-          <p className="text-center text-xs opacity-60">
+          <p className="text-xs text-muted-foreground">
             By continuing you agree to our terms and privacy policy.
           </p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

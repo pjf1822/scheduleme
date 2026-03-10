@@ -13,13 +13,14 @@ import {
 import { mapShiftsToEvents } from "@/lib/utils/shifts/ mapShiftsToEvents";
 import EventDetailModal from "../eventDetailModal/EventDetailModal";
 import { createShiftDateMap } from "@/lib/utils/shifts/createShiftDateMap";
-
+import timeGridPlugin from "@fullcalendar/timegrid";
 type Props = {
   busyBlocks: BusyBlock[];
   shifts: UserShift[];
 };
 
 const CalendarComp = ({ busyBlocks, shifts }: Props) => {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   const pendingDates = useRef(new Set<string>());
   const busyDateMap = getBusyDateMap(busyBlocks);
   const shiftEvents = mapShiftsToEvents(shifts);
@@ -28,7 +29,7 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
   const shiftDateMap = createShiftDateMap(shifts);
 
   const handleDateClick = async (info: any) => {
-    const dateKey = info.dateStr;
+    const dateKey = info.date.toLocaleDateString("en-CA");
     const shiftsForDay = shiftDateMap.get(dateKey);
 
     if (shiftsForDay && shiftsForDay.length > 0) {
@@ -59,20 +60,27 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
   return (
     <div>
       <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
         dateClick={handleDateClick}
         eventInteractive={false}
         fixedWeekCount={false}
-        initialView="dayGridMonth"
+        slotMinTime="10:00:00"
+        slotMaxTime="20:00:00"
+        initialView={isMobile ? "timeGridWeek" : "dayGridMonth"}
         showNonCurrentDates={false}
         events={shiftEvents}
         height="auto"
         eventContent={(arg) => {
+          console.log(arg);
           const type = arg.event.extendedProps.type;
 
           if (type === "shift") {
             return (
-              <div className="flex items-center gap-1 px-1">
+              <div className="flex items-center gap-1 px-1 ">
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: arg.event.backgroundColor }}
+                />
                 <span className="text-xs truncate">{arg.event.title}</span>
               </div>
             );
