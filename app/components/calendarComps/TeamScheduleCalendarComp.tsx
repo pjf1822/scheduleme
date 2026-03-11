@@ -9,7 +9,6 @@ import {
   TeamMember,
   TeamRoles,
 } from "@/lib/types/dbexports";
-import timeGridPlugin from "@fullcalendar/timegrid";
 
 import { useMemo, useRef, useState } from "react";
 import AvailabilityModal from "../availModalComponents/AvailabilityModal";
@@ -105,12 +104,12 @@ const TeamScheduleCalendarComp = ({
             <div className="flex justify-between items-center w-full px-1">
               <div className="flex gap-0.5 flex-wrap">
                 {Array.from({ length: busyCount }).map((_, i) => (
-                  <span key={i} className="text-red-500 text-xs font-bold">
+                  <span key={i} className="text-red-500 text-xl font-bold">
                     ✕
                   </span>
                 ))}
               </div>
-              <span>{arg.dayNumberText}</span>
+              <span style={{ color: "white" }}>{arg.dayNumberText}</span>
               {initialView === "dayGridWeek" &&
                 dayShifts
                   .filter((shift) => shift.assigned_user_id)

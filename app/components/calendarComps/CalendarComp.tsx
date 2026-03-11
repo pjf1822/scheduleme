@@ -13,19 +13,20 @@ import {
 import { mapShiftsToEvents } from "@/lib/utils/shifts/ mapShiftsToEvents";
 import EventDetailModal from "../eventDetailModal/EventDetailModal";
 import { createShiftDateMap } from "@/lib/utils/shifts/createShiftDateMap";
-import timeGridPlugin from "@fullcalendar/timegrid";
 type Props = {
   busyBlocks: BusyBlock[];
   shifts: UserShift[];
 };
 
 const CalendarComp = ({ busyBlocks, shifts }: Props) => {
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   const pendingDates = useRef(new Set<string>());
   const busyDateMap = getBusyDateMap(busyBlocks);
   const shiftEvents = mapShiftsToEvents(shifts);
   const [selectedShift, setSelectedShift] = useState<UserShift | null>(null);
-
+  const [initialView] = useState(() => {
+    if (typeof window === "undefined") return "dayGridMonth";
+    return window.innerWidth < 768 ? "dayGridWeek" : "dayGridMonth";
+  });
   const shiftDateMap = createShiftDateMap(shifts);
 
   const handleDateClick = async (info: any) => {
@@ -60,18 +61,17 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
   return (
     <div>
       <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         dateClick={handleDateClick}
         eventInteractive={false}
         fixedWeekCount={false}
         slotMinTime="10:00:00"
         slotMaxTime="20:00:00"
-        initialView={isMobile ? "timeGridWeek" : "dayGridMonth"}
+        initialView={initialView}
         showNonCurrentDates={false}
         events={shiftEvents}
-        height="auto"
+        height={initialView === "dayGridWeek" ? 500 : "auto"}
         eventContent={(arg) => {
-          console.log(arg);
           const type = arg.event.extendedProps.type;
 
           if (type === "shift") {
@@ -81,7 +81,9 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: arg.event.backgroundColor }}
                 />
-                <span className="text-xs truncate">{arg.event.title}</span>
+                <span className="text-xs text-white truncate leading-tight whitespace-normal break-words">
+                  {arg.event.title}
+                </span>
               </div>
             );
           }

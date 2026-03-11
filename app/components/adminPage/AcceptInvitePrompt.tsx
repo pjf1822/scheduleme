@@ -23,29 +23,106 @@ export default function AcceptInvitePrompt({ token, teamName }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--brand-4)]">
-      <div className="border rounded-xl p-8 max-w-md w-full flex flex-col items-center gap-6 bg-[var(--brand-3)]">
-        <div className="text-center">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={200}
-            height={90}
-            priority
-            className="mx-auto mb-4"
-          />
-          <h1 className="text-2xl font-semibold">You've been invited!</h1>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap');
+
+        .aip-wrap {
+          font-family: 'DM Mono', monospace;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          align-items:center;
+          height:100vh;
+          justify-content:space-between;
+        }
+
+        .aip-team-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width:100%;
+          padding: 12px 16px;
+          border: 1px solid rgba(250,204,21,0.15);
+          background: rgba(250,204,21,0.03);
+        }
+
+        .aip-team-icon {
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.2);
+          flex-shrink: 0;
+        }
+
+        .aip-team-sep {
+          width: 1px;
+          height: 16px;
+          background: rgba(255,255,255,0.08);
+          flex-shrink: 0;
+        }
+
+        .aip-team-name {
+          font-size: 11px;
+          letter-spacing: 0.1em;
+          color: #facc15;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .aip-google-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.12);
+          color: #f5f0e8;
+          font-family: 'DM Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 15px 28px;
+          cursor: pointer;
+          width: 40%;
+         
+          transition: border-color 0.2s, background 0.2s, transform 0.15s;
+          clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+
+        .aip-google-btn:hover {
+          border-color: #facc15;
+          background: rgba(250,204,21,0.05);
+          transform: translate(-2px, -2px);
+        }
+
+        .aip-google-btn:active {
+          transform: translate(0, 0);
+        }
+
+        .aip-footnote {
+          font-size: 10px;
+          color: rgba(255,255,255,0.15);
+          letter-spacing: 0.07em;
+          line-height: 1.8;
+          text-align: center;
+        }
+      `}</style>
+      <div className="aip-wrap">
+        <div className="aip-team-row">
+          <span className="aip-team-icon">Team</span>
+          <div className="aip-team-sep" />
+          <span className="aip-team-name">{teamName}</span>
         </div>
 
-        <Button
-          onClick={handleAccept}
-          size="lg"
-          className="w-full flex items-center gap-2"
-        >
+        <button className="aip-google-btn" onClick={handleAccept}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"
-            className="w-5 h-5"
+            width="18"
+            height="18"
+            style={{ flexShrink: 0 }}
           >
             <path
               fill="#FFC107"
@@ -65,12 +142,14 @@ export default function AcceptInvitePrompt({ token, teamName }: Props) {
             />
           </svg>
           Accept with Google
-        </Button>
+        </button>
 
-        <p className="text-xs text-black text-center">
-          By accepting, you'll be added to the team and signed in with Google.
+        <p className="aip-footnote">
+          You'll be added to {teamName} and signed in via Google.
+          <br />
+          No password needed.
         </p>
       </div>
-    </div>
+    </>
   );
 }
