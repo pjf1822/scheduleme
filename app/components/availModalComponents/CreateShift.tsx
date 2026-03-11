@@ -187,6 +187,65 @@ const CreateShift = ({
           border-color: rgba(250,204,21,0.4);
           color: #facc15;
         }
+          /* Shadcn select overrides */
+.cs-shadcn-trigger {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #f5f0e8;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  border-radius: 0;
+  height: auto;
+  padding: 11px 14px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.cs-shadcn-trigger:focus,
+.cs-shadcn-trigger[data-state="open"] {
+  border-color: rgba(250,204,21,0.3);
+  background: rgba(250,204,21,0.03);
+  box-shadow: none;
+  ring: none;
+  outline: none;
+}
+
+.cs-shadcn-content {
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0;
+  font-family: 'DM Mono', monospace;
+  color: #f5f0e8;
+}
+
+.cs-shadcn-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.cs-shadcn-item[data-highlighted] {
+  background: rgba(250,204,21,0.07);
+  color: #facc15;
+}
+
+/* Shared value layout */
+.cs-select-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cs-select-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
 
         /* Submit */
         .cs-submit {
@@ -247,23 +306,38 @@ const CreateShift = ({
           {/* Role */}
           <div className="cs-field">
             <span className="cs-label">Role</span>
-            <div className="cs-select-wrap">
-              <select
-                className="cs-select"
-                value={selectedRoleId}
-                onChange={(e) => setSelectedRoleId(e.target.value)}
-              >
-                <option value="" disabled>
-                  Select role...
-                </option>
+            <Select value={selectedRoleId} onValueChange={setSelectedRoleId}>
+              <SelectTrigger className="cs-shadcn-trigger">
+                <SelectValue placeholder="Select role...">
+                  {selectedRole && (
+                    <span className="cs-select-value">
+                      <span
+                        className="cs-select-swatch"
+                        style={{ background: selectedRole.color ?? "#facc15" }}
+                      />
+                      {selectedRole.name}
+                    </span>
+                  )}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="cs-shadcn-content">
                 {roles.map((role) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
-                  </option>
+                  <SelectItem
+                    key={role.id}
+                    value={role.id}
+                    className="cs-shadcn-item"
+                  >
+                    <span className="cs-select-value">
+                      <span
+                        className="cs-select-swatch"
+                        style={{ background: role.color ?? "#facc15" }}
+                      />
+                      {role.name}
+                    </span>
+                  </SelectItem>
                 ))}
-              </select>
-              <span className="cs-select-arrow">▾</span>
-            </div>
+              </SelectContent>
+            </Select>
             <div className="cs-role-preview">
               {selectedRole ? (
                 <>

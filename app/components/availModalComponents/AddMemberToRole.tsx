@@ -191,6 +191,54 @@ export const AddMemberToRole = ({
           color: rgba(255,255,255,0.18);
           font-size: 9px;
         }
+          .cs-assign-trigger {
+  width: 220px;
+}
+
+.cs-assign-trigger .cs-select-value {
+  font-size: 13px;
+  color: #f5f0e8;
+}
+
+/* Empty avatar placeholder for "Unassigned" row */
+.cs-assign-empty-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px dashed rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+
+.cs-assign-unassigned {
+  font-size: 13px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.06em;
+}
+
+.cs-assign-unassigned-label {
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.06em;
+}
+
+.cs-assign-item {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.cs-assign-item[data-highlighted] .cs-assign-unassigned-label {
+  color: rgba(250,204,21,0.5);
+}
+
+/* Make sure avatars are tight circles in this context */
+.cs-assign-item img,
+.cs-assign-trigger img {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  opacity: 0.85;
+}
 
         /* Delete button */
         .amr-delete {
@@ -249,24 +297,57 @@ export const AddMemberToRole = ({
                         <span
                           className={`amr-status ${isFilled ? "filled" : "open"}`}
                         />
-                        <div className="amr-select-wrap">
-                          <select
-                            className="amr-select"
-                            value={shift.assigned_user_id ?? "unassigned"}
-                            onChange={(e) =>
-                              handleAssign(shift.id, e.target.value)
-                            }
-                          >
-                            <option value="unassigned">Unassigned</option>
+                        <Select
+                          value={shift.assigned_user_id ?? "unassigned"}
+                          onValueChange={(val) => handleAssign(shift.id, val)}
+                        >
+                          <SelectTrigger className="cs-shadcn-trigger cs-assign-trigger">
+                            <SelectValue placeholder="Assign member">
+                              {shift.assigned_user_id && shift.profiles ? (
+                                <span className="cs-select-value">
+                                  {shift.profiles.avatar_url && (
+                                    <MemberAvatar member={shift} size="sm" />
+                                  )}
+                                  <span>{shift.profiles.display_name}</span>
+                                </span>
+                              ) : (
+                                <span className="cs-assign-unassigned">
+                                  — Unassigned
+                                </span>
+                              )}
+                            </SelectValue>
+                          </SelectTrigger>
+
+                          <SelectContent className="cs-shadcn-content">
+                            <SelectItem
+                              value="unassigned"
+                              className="cs-shadcn-item cs-assign-item"
+                            >
+                              <span className="cs-select-value">
+                                <span className="cs-assign-empty-avatar" />
+                                <span className="cs-assign-unassigned-label">
+                                  Unassigned
+                                </span>
+                              </span>
+                            </SelectItem>
 
                             {shift.assigned_user_id &&
                               !availableMembers.some(
                                 (m) => m.user_id === shift.assigned_user_id,
                               ) && (
-                                <option value={shift.assigned_user_id}>
-                                  {shift.profiles?.display_name ?? "Unknown"}
-                                </option>
+                                <SelectItem
+                                  value={shift.assigned_user_id}
+                                  className="cs-shadcn-item cs-assign-item"
+                                >
+                                  <span className="cs-select-value">
+                                    {shift.profiles?.avatar_url && (
+                                      <MemberAvatar member={shift} size="sm" />
+                                    )}
+                                    <span>{shift.profiles.display_name}</span>
+                                  </span>
+                                </SelectItem>
                               )}
+
                             {availableMembers
                               .filter(
                                 (member) =>
@@ -274,16 +355,23 @@ export const AddMemberToRole = ({
                                   member.user_id === shift.assigned_user_id,
                               )
                               .map((member) => (
-                                <option
+                                <SelectItem
                                   key={member.id}
                                   value={member.user_id ?? ""}
+                                  className="cs-shadcn-item cs-assign-item"
                                 >
-                                  {member?.profiles?.display_name}
-                                </option>
+                                  <span className="cs-select-value">
+                                    {member?.profiles?.avatar_url && (
+                                      <MemberAvatar member={member} size="sm" />
+                                    )}
+                                    <span>
+                                      {member?.profiles?.display_name}
+                                    </span>
+                                  </span>
+                                </SelectItem>
                               ))}
-                          </select>
-                          <span className="amr-select-arrow">▾</span>
-                        </div>
+                          </SelectContent>
+                        </Select>
                         <button
                           title="Delete shift"
                           onClick={() => handleDelete(shift.id)}
