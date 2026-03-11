@@ -230,7 +230,7 @@ const AdminPage = async () => {
             <div className="admin-section">
               <div className="section-label">
                 <span className="section-num">03</span>
-                <span className="section-title">Roles & Permissions</span>
+                <span className="section-title">Roles </span>
                 <div className="section-line" />
               </div>
               <div className="section-content">
