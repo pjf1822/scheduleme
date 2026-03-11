@@ -65,7 +65,7 @@ const Navbar = ({
           color: rgba(255,255,255,0.75);
           white-space: nowrap;
           overflow: hidden;
-          text-overflow: ellipsis;
+          
           max-width: 220px;
         }
 

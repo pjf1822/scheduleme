@@ -199,7 +199,6 @@ const AdminPage = async () => {
             </div>
             <div className="admin-meta">
               <span className="admin-team-name">{teamName}</span>
-              <span className="admin-badge">Admin Access</span>
             </div>
           </div>
           <div className="admin-sections">
