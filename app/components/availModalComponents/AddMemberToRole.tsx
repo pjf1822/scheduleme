@@ -40,94 +40,266 @@ export const AddMemberToRole = ({
     onShiftDeleted(shiftId);
   };
   return (
-    <div className="border-t pt-4 space-y-4">
-      <h3 className="font-semibold text-white">Assign Members to Roles</h3>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap');
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...grouped.entries()].map(([roleName, { color, shifts }]) => (
-          <div
-            key={roleName}
-            className="border rounded-lg p-4 space-y-2 bg-[var(--brand-4)]"
-          >
-            <div className="flex items-center gap-2">
-              {color && (
-                <span
-                  className="w-3 h-3 rounded-full shrink-0"
-                  style={{ backgroundColor: color }}
-                />
-              )}
-              <h4 className="font-medium">{roleName}</h4>
-            </div>
+        .amr-wrap {
+          font-family: 'DM Mono', monospace;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
 
-            <div className="max-h-48 overflow-y-auto space-y-1 pr-1">
-              {shifts.map((shift: any) => (
-                <div key={shift.id} className="flex items-center gap-2 py-2 ">
-                  {shift.assigned_user_id ? (
-                    <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 border border-green-300">
-                      Filled
-                    </span>
-                  ) : (
-                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600 border border-gray-300">
-                      Open
-                    </span>
-                  )}
+        .amr-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 2px;
+        }
 
-                  <Select
-                    value={shift.assigned_user_id ?? "unassigned"}
-                    onValueChange={(val) => handleAssign(shift.id, val)}
-                  >
-                    <SelectTrigger className="w-[220px] border border-gray-300 rounded-md bg-white hover:border-gray-400 focus:ring-2 focus:ring-neutral-300">
-                      <SelectValue placeholder="Assign member" />
-                    </SelectTrigger>
+        /* Role column */
+        .amr-role-col {
+          border: 1px solid rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.01);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
 
-                    <SelectContent>
-                      <SelectItem value="unassigned">Unassigned</SelectItem>
-                      {shift.assigned_user_id &&
-                        !availableMembers.some(
-                          (m) => m.user_id === shift.assigned_user_id,
-                        ) && (
-                          <SelectItem value={shift.assigned_user_id}>
-                            <div className="flex items-center gap-2">
-                              {shift.profiles?.avatar_url && (
-                                <MemberAvatar member={shift} size="sm" />
-                              )}
-                              <span>{shift.profiles.display_name}</span>
-                            </div>
-                          </SelectItem>
-                        )}
-                      {availableMembers
-                        .filter(
-                          (member) =>
-                            !assignedUserIds.has(member.user_id) ||
-                            member.user_id === shift.assigned_user_id,
-                        )
-                        .map((member) => (
-                          <SelectItem
-                            key={member.id}
-                            value={member.user_id ?? ""}
-                          >
-                            <div className="flex items-center gap-2">
-                              {member?.profiles?.avatar_url && (
-                                <MemberAvatar member={member} size="sm" />
-                              )}
-                              <span>{member?.profiles?.display_name}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                  <button
-                    onClick={() => handleDelete(shift.id)}
-                    className="ml-auto w-[25px] text-red-400 hover:text-red-600 text-s border border-red-300 p-1 rounded-lg"
-                  >
-                    ✕
-                  </button>
+        .amr-role-header {
+          padding: 10px 14px;
+          border-bottom: 1px solid rgba(255,255,255,0.04);
+          background: rgba(255,255,255,0.025);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          position: relative;
+        }
+
+        .amr-role-bar {
+          position: absolute;
+          left: 0; top: 0; bottom: 0;
+          width: 2px;
+        }
+
+        .amr-role-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        .amr-role-name {
+          font-size: 12px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.5);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .amr-role-count {
+          margin-left: auto;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 14px;
+          color: rgba(255,255,255,0.75);
+          letter-spacing: 0.06em;
+          flex-shrink: 0;
+        }
+
+        /* Shift rows */
+        .amr-shifts {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+          padding: 8px;
+          max-height: 220px;
+          overflow-y: auto;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255,255,255,0.06) transparent;
+        }
+
+        .amr-shift-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 7px 8px;
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.04);
+          transition: border-color 0.15s;
+        }
+
+        .amr-shift-row:hover {
+          border-color: rgba(255,255,255,0.08);
+        }
+
+        /* Status pip */
+        .amr-status {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        .amr-status.filled { background: #4ade80; }
+        .amr-status.open {
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Native select */
+        .amr-select-wrap {
+          position: relative;
+          flex: 1;
+          min-width: 0;
+        }
+
+        .amr-select {
+          width: 100%;
+          appearance: none;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.07);
+          color: #f5f0e8;
+          font-family: 'DM Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.05em;
+          padding: 6px 24px 6px 8px;
+          outline: none;
+          cursor: pointer;
+          transition: border-color 0.15s;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .amr-select:focus {
+          border-color: rgba(250,204,21,0.3);
+        }
+
+        .amr-select option {
+          background: #111;
+          color: #f5f0e8;
+        }
+
+        .amr-select-arrow {
+          position: absolute;
+          right: 7px;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          color: rgba(255,255,255,0.18);
+          font-size: 9px;
+        }
+
+        /* Delete button */
+        .amr-delete {
+          width: 22px;
+          height: 22px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          border: 1px solid #ff000075;
+          color: red;
+          font-size: 9px;
+          cursor: pointer;
+          transition: border-color 0.15s, color 0.15s, background 0.15s;
+          padding: 0;
+          line-height: 1;
+        }
+
+        .amr-delete:hover {
+          border-color: rgba(248,113,113,0.4);
+          color: #f87171;
+          background: rgba(248,113,113,0.06);
+        }
+      `}</style>
+
+      <div className="amr-wrap">
+        <div className="amr-grid">
+          {[...grouped.entries()].map(([roleName, { color, shifts }]) => {
+            const filledCount = shifts.filter(
+              (s: any) => s.assigned_user_id,
+            ).length;
+
+            return (
+              <div key={roleName} className="amr-role-col">
+                <div className="amr-role-header">
+                  <div
+                    className="amr-role-bar"
+                    style={{ background: color ?? "#facc15" }}
+                  />
+                  <span
+                    className="amr-role-dot"
+                    style={{ background: color ?? "#facc15" }}
+                  />
+                  <span className="amr-role-name">{roleName}</span>
+                  <span className="amr-role-count">
+                    {filledCount}/{shifts.length}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
+
+                <div className="amr-shifts">
+                  {shifts.map((shift: any) => {
+                    const isFilled = !!shift.assigned_user_id;
+                    return (
+                      <div key={shift.id} className="amr-shift-row">
+                        <span
+                          className={`amr-status ${isFilled ? "filled" : "open"}`}
+                        />
+                        <div className="amr-select-wrap">
+                          <select
+                            className="amr-select"
+                            value={shift.assigned_user_id ?? "unassigned"}
+                            onChange={(e) =>
+                              handleAssign(shift.id, e.target.value)
+                            }
+                          >
+                            <option value="unassigned">Unassigned</option>
+
+                            {shift.assigned_user_id &&
+                              !availableMembers.some(
+                                (m) => m.user_id === shift.assigned_user_id,
+                              ) && (
+                                <option value={shift.assigned_user_id}>
+                                  {shift.profiles?.display_name ?? "Unknown"}
+                                </option>
+                              )}
+                            {availableMembers
+                              .filter(
+                                (member) =>
+                                  !assignedUserIds.has(member.user_id) ||
+                                  member.user_id === shift.assigned_user_id,
+                              )
+                              .map((member) => (
+                                <option
+                                  key={member.id}
+                                  value={member.user_id ?? ""}
+                                >
+                                  {member?.profiles?.display_name}
+                                </option>
+                              ))}
+                          </select>
+                          <span className="amr-select-arrow">▾</span>
+                        </div>
+                        <button
+                          title="Delete shift"
+                          onClick={() => handleDelete(shift.id)}
+                          className="amr-delete"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
