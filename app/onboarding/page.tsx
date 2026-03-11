@@ -286,7 +286,7 @@ export default function OnboardingPage() {
 
         .ob-btn-ghost {
          font-family: 'DM Mono', monospace;
-          font-size: 10px;
+          font-size: 14px;
           letter-spacing: 0.15em;
           text-transform: uppercase;
           color: rgba(255, 255, 255, 0.74);
