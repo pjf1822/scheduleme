@@ -69,12 +69,12 @@ const TeamScheduleCalendarComp = ({
   return (
     <>
       <style>{`
-      .calendar-day-number {
+      .calendar-day-number , .calendar-event-title {
         color: white;
         transition: color 0.15s;
       }
 
-      .fc-daygrid-day:hover .calendar-day-number {
+      .fc-daygrid-day:hover .calendar-day-number , .fc-daygrid-day:hover .calendar-event-title {
         color: black;
       }
     `}</style>
@@ -168,7 +168,9 @@ const TeamScheduleCalendarComp = ({
                       size="lg"
                     />
                   )}
-                  <span className="text-xs truncate">{arg.event.title}</span>
+                  <span className="text-xs truncate calendar-event-title">
+                    {arg.event.title}
+                  </span>
                 </div>
               );
             }
