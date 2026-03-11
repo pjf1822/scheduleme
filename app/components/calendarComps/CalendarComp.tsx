@@ -71,6 +71,15 @@ const CalendarComp = ({ busyBlocks, shifts }: Props) => {
         showNonCurrentDates={false}
         events={shiftEvents}
         height={initialView === "dayGridWeek" ? 500 : "auto"}
+        dayCellContent={(arg) => {
+          const dateStr = arg.date.toISOString().split("T")[0];
+
+          return (
+            <div className="flex justify-between items-center w-full px-1">
+              <span style={{ color: "white" }}>{arg.dayNumberText}</span>
+            </div>
+          );
+        }}
         eventContent={(arg) => {
           const type = arg.event.extendedProps.type;
 
