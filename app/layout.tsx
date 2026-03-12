@@ -58,8 +58,10 @@ export default async function RootLayout({
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
-  const hideNavbar = pathname === "/" || pathname.startsWith("/auth");
-
+  const hideNavbar =
+    pathname === "/" ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/invite");
   return (
     <html lang="en">
       <head>
