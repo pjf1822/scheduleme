@@ -141,7 +141,7 @@ const AvailabilityModal = ({
         }
 
         .avail-modal-body {
-          padding: 24px 28px;
+          padding: 14px 18px;
           display: flex;
           flex-direction: column;
           gap: 2px;
@@ -153,6 +153,7 @@ const AvailabilityModal = ({
           background: rgba(255,255,255,0.01);
           overflow: hidden;
           margin-bottom: 2px;
+          padding:10px
         }
 
         .avail-section-label {

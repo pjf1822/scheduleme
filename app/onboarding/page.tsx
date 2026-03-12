@@ -242,7 +242,7 @@ export default function OnboardingPage() {
           font-size: 10px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.2);
+          color: rgba(255,255,255,0.52);
         }
 
         .ob-form-title {
@@ -252,6 +252,10 @@ export default function OnboardingPage() {
           letter-spacing: 0.03em;
           line-height: 1;
         }
+          .ob-form-subtext{
+          font-size: 12px;
+          color: #f5f0e8;
+          }
 
         .ob-form-title span { color: #facc15; }
 
@@ -332,7 +336,7 @@ export default function OnboardingPage() {
         .ob-choose-cards {
           display: flex;
           flex-direction: column;
-          gap: 2px;
+          gap: 20px;
         }
 
         .ob-choose-card {
@@ -377,7 +381,7 @@ export default function OnboardingPage() {
         .ob-choose-card-info { display: flex; flex-direction: column; gap: 3px; }
 
         .ob-choose-card-title {
-          font-size: 12px;
+          font-size: 14px;
           letter-spacing: 0.08em;
           color: #f5f0e8;
         }
@@ -405,6 +409,7 @@ export default function OnboardingPage() {
           display: flex;
           flex-direction: column;
           gap: 2px;
+          width:100%
         }
 
         .ob-role-row {
@@ -667,7 +672,13 @@ export default function OnboardingPage() {
                   Define
                   <br />
                   <span>roles.</span>
+                  <br />
                 </h2>
+                <p className="ob-form-subtext">
+                  Roles help organize positions at your company.
+                  <br />
+                  Examples: Student • Audio Engineer • Stage Hand
+                </p>
               </div>
               <div className="ob-divider" />
 
