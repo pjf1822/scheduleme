@@ -7,16 +7,35 @@ import LogoutButton from "../components/layout/LogoutButton";
 import Image from "next/image";
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState<"choose" | "team" | "roles" | "member">(
-    "choose",
-  );
+  const [step, setStep] = useState<
+    "choose" | "team" | "roles" | "invite" | "member"
+  >("choose");
   const [teamName, setTeamName] = useState("");
   const [roles, setRoles] = useState<{ name: string; color: string }[]>([
     { name: "", color: "#3b82f6" },
   ]);
+  const [inviteEmails, setInviteEmails] = useState<string[]>([""]);
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const updateEmail = (index: number, value: string) => {
+    setInviteEmails((prev) => prev.map((e, i) => (i === index ? value : e)));
+  };
+
+  const addEmail = () => {
+    const last = inviteEmails[inviteEmails.length - 1];
+    if (!last.trim()) return;
+    setInviteEmails((prev) => [...prev, ""]);
+  };
+
+  const removeEmail = (index: number) => {
+    setInviteEmails((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const validEmails = inviteEmails
+    .map((e) => e.trim())
+    .filter((e) => e.includes("@"));
   const updateRoleName = (index: number, value: string) => {
     setRoles((prev) =>
       prev.map((r, i) => (i === index ? { ...r, name: value } : r)),
@@ -509,8 +528,9 @@ export default function OnboardingPage() {
                 { key: "choose", num: "01", label: "Choose Path" },
                 { key: "team", num: "02", label: "Name Your Team" },
                 { key: "roles", num: "03", label: "Define Roles" },
+                { key: "invite", num: "04", label: "Invite Members" },
               ].map(({ key, num, label }) => {
-                const order = ["choose", "team", "roles"];
+                const order = ["choose", "team", "roles", "invite"];
                 const currentIdx = order.indexOf(step);
                 const thisIdx = order.indexOf(key);
                 const isActive = step === key;
@@ -650,7 +670,6 @@ export default function OnboardingPage() {
                 </h2>
               </div>
               <div className="ob-divider" />
-              <h1 className="text-2xl font-bold">Create roles</h1>
 
               <div className="ob-roles-list">
                 {roles.map((role, index) => (
@@ -693,6 +712,78 @@ export default function OnboardingPage() {
               </div>
 
               <button
+                disabled={!teamName.trim()}
+                onClick={() => setStep("invite")}
+                className="ob-btn-primary"
+              >
+                Continue →
+              </button>
+              <div className="ob-logout-wrap">
+                <button
+                  onClick={() => setStep("team")}
+                  className="ob-btn-ghost"
+                >
+                  ← Back
+                </button>
+              </div>
+            </div>
+          )}
+          {/* STEP 2 — INVITES */}
+
+          {step === "invite" && (
+            <div className="ob-form" key="invite">
+              <div className="ob-form-header">
+                <p className="ob-form-tag">Step 04 / Invite</p>
+                <h2 className="ob-form-title">
+                  Invite
+                  <br />
+                  <span>members.</span>
+                </h2>
+              </div>
+              <div className="ob-divider" />
+
+              <div className="ob-roles-list">
+                {inviteEmails.map((email, index) => (
+                  <div key={index} className="ob-role-row">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => updateEmail(index, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && email.trim()) {
+                          e.preventDefault();
+                          addEmail();
+                          setTimeout(() => {
+                            const inputs =
+                              document.querySelectorAll<HTMLInputElement>(
+                                "[data-email]",
+                              );
+                            inputs[index + 1]?.focus();
+                          }, 0);
+                        }
+                      }}
+                      data-email
+                      placeholder={`member@email.com`}
+                      className="ob-input"
+                      style={{ flex: 1 }}
+                      autoFocus={index === inviteEmails.length - 1 && index > 0}
+                    />
+                    {inviteEmails.length > 1 && (
+                      <button
+                        className="ob-role-delete"
+                        onClick={() => removeEmail(index)}
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button className="ob-add-role-btn" onClick={addEmail}>
+                  + Add Member
+                </button>
+              </div>
+
+              <button
                 disabled={loading}
                 onClick={async () => {
                   setLoading(true);
@@ -701,6 +792,7 @@ export default function OnboardingPage() {
                     await completeOnboardingAction({
                       teamName,
                       roles: validRoles,
+                      invites: validEmails,
                     });
 
                     router.push("/dashboard");
@@ -713,11 +805,18 @@ export default function OnboardingPage() {
               >
                 {loading ? "Creating..." : "Create Team"}
               </button>
+
+              <div className="ob-logout-wrap">
+                <button
+                  onClick={() => setStep("roles")}
+                  className="ob-btn-ghost"
+                >
+                  ← Back
+                </button>
+              </div>
             </div>
           )}
-          {/* <button onClick={() => setStep("team")} className="ob-btn-ghost">
-            ← Back
-          </button> */}
+
           <div className="ob-logout-wrap">
             <LogoutButton />
           </div>

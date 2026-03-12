@@ -7,11 +7,12 @@ export async function runCompleteOnboardingRpc(
 ) {
   const supabase = await createClient();
 
-  const { error } = await supabase.rpc("complete_onboarding_full", {
+  const { data, error } = await supabase.rpc("complete_onboarding_full", {
     p_user_id: userId,
     p_team_name: teamName,
     p_roles: roles,
   });
 
   if (error) throw new Error(error.message);
+  return data;
 }
