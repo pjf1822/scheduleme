@@ -419,7 +419,7 @@ export default function RootClient() {
 
           <div className="deco-num">01</div>
 
-          <p className="eyebrow">Scheduling, simplified</p>
+          <p className="eyebrow">Team Scheduling Software | ScheduleMe</p>
 
           <h1 className="headline">
             Your team.
