@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: "ScheduleMe",
     images: [
       {
-        url: "/og.png",
+        url: "/fulllogo.png",
         width: 1200,
         height: 630,
       },
