@@ -17,27 +17,6 @@ export const metadata: Metadata = {
     "weekly schedule builder",
     "work schedule manager",
   ],
-  openGraph: {
-    title: "ScheduleMe",
-    description: "A straightforward schedule manager for teams.",
-    url: "https://scheduleme.live",
-    siteName: "ScheduleMe",
-    images: [
-      {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: "ScheduleMe",
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "ScheduleMe",
-    description: "A straightforward schedule manager for teams.",
-    images: ["/og.png"],
-  },
 };
 
 export default function Home() {
