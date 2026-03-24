@@ -42,7 +42,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ScheduleMe",
-    description: "A straightforward team scheduling platform.",
+    description:
+      "No HR software. No onboarding. No monthly bill. Just a schedule your team can see.",
     images: ["/og.png"],
   },
 };
