@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "ScheduleMe",
     images: [
       {
-        url: "/fulllogo.png",
+        url: "/og.png",
         width: 1200,
         height: 630,
         alt: "ScheduleMe",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ScheduleMe",
     description: "A straightforward schedule manager for teams.",
-    images: ["/fulllogo.png"],
+    images: ["/og.png"],
   },
 };
 
