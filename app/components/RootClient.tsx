@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
@@ -433,11 +430,8 @@ export default function RootClient() {
 
           <div className="cta-row">
             <Link href="/auth/login" className="btn-primary">
-              Sign In →
+              Get started free →
             </Link>
-            <a href="#" className="btn-ghost">
-              Learn more
-            </a>
           </div>
         </main>
 
