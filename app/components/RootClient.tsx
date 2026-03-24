@@ -435,28 +435,6 @@ export default function RootClient() {
           </div>
         </main>
 
-        {/* Stats */}
-        {/* <div className="stats">
-          <div className="stat">
-            <div className="stat-num">
-              ∞<span>+</span>
-            </div>
-            <div className="stat-label">Shifts managed</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">
-              1<span>min</span>
-            </div>
-            <div className="stat-label">Setup time</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">
-              0<span>bs</span>
-            </div>
-            <div className="stat-label">Complexity</div>
-          </div>
-        </div> */}
-
         {/* Footer */}
         <footer className="footer">
           <span className="footer-copy">© 2026 ScheduleMe</span>

@@ -2,9 +2,9 @@ import { Metadata } from "next";
 
 import RootClient from "./components/RootClient";
 export const metadata: Metadata = {
-  title: "ScheduleMe – Simple Team Scheduling",
+  title: "ScheduleMe – Free Shift Scheduling for Small Teams",
   description:
-    "ScheduleMe is a straightforward team scheduling tool for managing shifts, roles, and availability.",
+    "Free team scheduling for salons, venues, and small businesses. No setup, no monthly bill. Just see who works what days.",
   keywords: [
     "employee shift scheduler",
     "free shift scheduling app",
