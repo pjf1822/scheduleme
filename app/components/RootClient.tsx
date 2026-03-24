@@ -1,10 +1,12 @@
 "use client";
 
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 export default function RootClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const supabase = createClient();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -74,6 +76,16 @@ export default function RootClient() {
       window.removeEventListener("resize", resize);
     };
   }, []);
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) alert(error.message);
+  };
 
   return (
     <>
@@ -255,44 +267,41 @@ export default function RootClient() {
           border-color: var(--paper);
         }
 
-        /* stats strip */
-        .stats {
-          position: relative;
-          z-index: 10;
+       
+          .google-btn {
           display: flex;
-          gap: 0;
-          border-top: 1px solid rgba(255,255,255,0.06);
-          max-width: 900px;
-          margin: 0 auto;
-          width: 100%;
-        }
-
-        .stat {
-          flex: 1;
-          padding: 32px 40px;
-          border-right: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .stat:last-child { border-right: none; }
-
-        .stat-num {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 42px;
-          color: var(--paper);
-          letter-spacing: 0.04em;
-        }
-
-        .stat-num span {
-          color: var(--yellow);
-        }
-
-        .stat-label {
-          font-size: 10px;
-          letter-spacing: 0.15em;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.12);
+          color: #f5f0e8;
+          font-family: 'DM Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.2);
-          margin-top: 4px;
+          padding: 16px 28px;
+          cursor: pointer;
+          width: 100%;
+          position: relative;
+          transition: border-color 0.2s, background 0.2s, transform 0.15s;
+          clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+          opacity: 0;
+          animation: fadeUp 0.6s ease both 0.75s;
         }
+
+        .google-btn:hover {
+          border-color: #facc15;
+          background: rgba(250,204,21,0.05);
+          transform: translate(-2px, -2px);
+        }
+
+        .google-btn:active { transform: translate(0, 0); }
+
+        .google-icon { flex-shrink: 0; }
+
+
+       
 
         /* footer bar */
         .footer {
@@ -429,9 +438,37 @@ export default function RootClient() {
           </p>
 
           <div className="cta-row">
-            <Link href="/auth/login" className="btn-primary">
-              Get started free →
-            </Link>
+            <button className="google-btn" onClick={handleGoogleLogin}>
+              <svg
+                className="google-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 48 48"
+                width="18"
+                height="18"
+              >
+                <path
+                  fill="#FFC107"
+                  d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.2 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10 0 19-7.3 19-20 0-1.3-.1-2.3-.4-3.5z"
+                />
+                <path
+                  fill="#FF3D00"
+                  d="M6.3 14.7l6.6 4.8C14.7 16.1 18.9 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"
+                />
+                <path
+                  fill="#4CAF50"
+                  d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.7-3.4-11.3-8l-6.6 5.1C9.5 39.7 16.2 44 24 44z"
+                />
+                <path
+                  fill="#1976D2"
+                  d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.3-6.1 6.6l6.3 5.2C39.5 36.7 43 31 43 24c0-1.3-.1-2.3-.4-3.5z"
+                />
+              </svg>
+              Continue with Google
+            </button>
+
+            <p className="footnote">
+              By signing in you agree to our terms of service.
+            </p>
           </div>
         </main>
 
