@@ -357,6 +357,106 @@ export default function RootClient() {
           color: rgba(255,255,255,0.2);
         }
 
+        /* how it works */
+        .hiw {
+          position: relative;
+          z-index: 10;
+          padding: 80px 40px 100px;
+          max-width: 1200px;
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        .hiw-eyebrow {
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.85);
+          margin-bottom: 48px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .hiw-eyebrow::before {
+          content: '';
+          display: block;
+          width: 32px;
+          height: 1px;
+          background: rgba(255,255,255,0.7);
+        }
+
+        .hiw-steps {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2px;
+        }
+
+        .hiw-step {
+          padding: 40px 36px;
+          border: 1px solid rgba(255,255,255,0.06);
+          position: relative;
+          transition: border-color 0.2s;
+        }
+
+        .hiw-step:hover {
+          border-color: rgba(250,204,21,0.2);
+        }
+
+        .step-num {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 64px;
+          line-height: 1;
+          color: rgba(255,255,255,0.44);
+          position: absolute;
+          top: 20px;
+          right: 24px;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .step-icon {
+          width: 36px;
+          height: 36px;
+          border: 1px solid rgba(250,204,21,0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 28px;
+          clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+        }
+
+        .step-icon svg {
+          width: 16px;
+          height: 16px;
+          stroke: var(--yellow);
+          fill: none;
+          stroke-width: 1.5;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .step-title {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 28px;
+          letter-spacing: 0.05em;
+          color: var(--paper);
+          margin-bottom: 12px;
+        }
+
+        .step-desc {
+          font-size: 12px;
+          color: rgba(255,255,255,0.7);
+          line-height: 1.9;
+          letter-spacing: 0.02em;
+          max-width: 240px;
+        }
+
+        @media (max-width: 860px) {
+          .hiw { padding: 60px 24px 80px; }
+          .hiw-steps { grid-template-columns: 1fr; }
+        }
+
         /* footer bar */
         .footer {
           position: relative;
@@ -430,8 +530,6 @@ export default function RootClient() {
             padding: 60px 24px 40px;
             gap: 48px;
           }
-
-        
 
           .screenshot-frame {
             transform: rotate(0deg);
@@ -549,6 +647,60 @@ export default function RootClient() {
             <span className="screenshot-label">Live schedule view</span>
           </div>
         </main>
+        {/* How it works */}
+        <section className="hiw">
+          <p className="hiw-eyebrow">How it works</p>
+          <div className="hiw-steps">
+            <div className="hiw-step">
+              <span className="step-num">01</span>
+              <div className="step-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </div>
+              <h3 className="step-title">Add your team</h3>
+              <p className="step-desc">
+                Invite your crew — they're in within seconds. No app download.
+              </p>
+            </div>
+
+            <div className="hiw-step">
+              <span className="step-num">02</span>
+              <div className="step-icon">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                  <path d="M9 16l2 2 4-4" />
+                </svg>
+              </div>
+              <h3 className="step-title">Block off busy days</h3>
+              <p className="step-desc">
+                Each member marks when they can't work. No back and forth, no
+                group chat chaos.
+              </p>
+            </div>
+
+            <div className="hiw-step">
+              <span className="step-num">03</span>
+              <div className="step-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M1 6l11 7L23 6" />
+                  <rect x="1" y="4" width="22" height="16" rx="2" />
+                </svg>
+              </div>
+              <h3 className="step-title">Schedule with confidence</h3>
+              <p className="step-desc">
+                See everyone's availability in one view. Build the schedule in
+                minutes, not hours.
+              </p>
+            </div>
+          </div>
+        </section>
         {/* Footer */}
         <footer className="footer">
           <span className="footer-copy">© 2026 ScheduleMe</span>
