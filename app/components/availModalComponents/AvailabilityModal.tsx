@@ -174,10 +174,10 @@ const AvailabilityModal = ({
         }
 
         .avail-section-title {
-          font-size: 14px;
+          font-size: 16px;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.75);
+          color: rgba(255,255,255,0.99);
         }
 
         .avail-section-line {

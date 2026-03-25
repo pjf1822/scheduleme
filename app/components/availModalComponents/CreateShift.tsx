@@ -167,7 +167,7 @@ const CreateShift = ({
           font-family: 'DM Mono', monospace;
           font-size: 11px;
           letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.3);
+          color: rgba(255,255,255,0.8);
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.07);
           padding: 9px 0;
@@ -273,7 +273,7 @@ const CreateShift = ({
         }
 
         .cs-submit:disabled {
-          opacity: 0.2;
+          opacity: 0.5;
           cursor: not-allowed;
         }
 

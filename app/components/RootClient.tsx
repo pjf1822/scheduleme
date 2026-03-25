@@ -122,7 +122,6 @@ export default function RootClient() {
           z-index: 0;
         }
 
-        /* grid overlay */
         .grid-overlay {
           position: fixed;
           inset: 0;
@@ -162,19 +161,24 @@ export default function RootClient() {
           border-radius: 2px;
         }
 
-        /* hero */
+        /* hero — two column layout */
         .hero {
           position: relative;
           z-index: 10;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          gap: 60px;
+          padding: 80px 40px 60px;
+          max-width: 1200px;
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        .hero-copy {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          justify-content: center;
-          padding: 80px 40px 60px;
-          max-width: 900px;
-          margin: 0 auto;
-          width: 100%;
-          gap: 0;
         }
 
         .eyebrow {
@@ -198,7 +202,7 @@ export default function RootClient() {
 
         .headline {
           font-family: 'Bebas Neue', sans-serif;
-          font-size: clamp(72px, 13vw, 160px);
+          font-size: clamp(60px, 8vw, 120px);
           line-height: 0.9;
           color: var(--paper);
           letter-spacing: 0.01em;
@@ -211,7 +215,7 @@ export default function RootClient() {
         }
 
         .sub {
-          margin-top: 40px;
+          margin-top: 32px;
           font-size: 13px;
           color: rgba(255,255,255,0.35);
           max-width: 360px;
@@ -220,55 +224,15 @@ export default function RootClient() {
         }
 
         .cta-row {
-          margin-top: 48px;
+          margin-top: 40px;
           display: flex;
           align-items: center;
           gap: 24px;
           flex-wrap: wrap;
+          width: 100%;
         }
 
-        .btn-primary {
-          background: var(--yellow);
-          color: var(--ink);
-          font-family: 'DM Mono', monospace;
-          font-size: 12px;
-          font-weight: 500;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          padding: 14px 36px;
-          border: none;
-          cursor: pointer;
-          text-decoration: none;
-          display: inline-block;
-          position: relative;
-          transition: transform 0.15s ease, box-shadow 0.15s ease;
-          clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-        }
-
-        .btn-primary:hover {
-          transform: translate(-2px, -2px);
-          box-shadow: 4px 4px 0 rgba(250,204,21,0.3);
-        }
-
-        .btn-ghost {
-          font-family: 'DM Mono', monospace;
-          font-size: 11px;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.3);
-          text-decoration: none;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
-          padding-bottom: 2px;
-          transition: color 0.15s, border-color 0.15s;
-        }
-
-        .btn-ghost:hover {
-          color: var(--paper);
-          border-color: var(--paper);
-        }
-
-       
-          .google-btn {
+        .google-btn {
           display: flex;
           align-items: center;
           justify-content: center;
@@ -297,11 +261,101 @@ export default function RootClient() {
         }
 
         .google-btn:active { transform: translate(0, 0); }
-
         .google-icon { flex-shrink: 0; }
 
+        .footnote {
+          font-size: 10px;
+          color: rgba(255,255,255,0.2);
+          letter-spacing: 0.05em;
+          margin-top: 4px;
+        }
 
-       
+        /* product screenshot */
+        .hero-visual {
+          position: relative;
+          opacity: 0;
+          animation: fadeUp 0.8s ease both 0.9s;
+        }
+
+        /* subtle float animation */
+        @keyframes float {
+          0%, 100% { transform: rotate(1.5deg) translateY(0px); }
+          50% { transform: rotate(1.5deg) translateY(-10px); }
+        }
+
+        .screenshot-frame {
+          position: relative;
+          border-radius: 8px;
+          overflow: hidden;
+          transform: rotate(1.5deg);
+          animation: float 6s ease-in-out infinite;
+          box-shadow:
+            0 0 0 1px rgba(250,204,21,0.25),
+            0 0 40px rgba(250,204,21,0.08),
+            0 40px 80px rgba(0,0,0,0.6);
+        }
+
+        /* fake window chrome bar */
+        .screenshot-chrome {
+          background: #141414;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          padding: 10px 14px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .chrome-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+        }
+
+        .chrome-dot:nth-child(1) { background: rgba(255,90,90,0.6); }
+        .chrome-dot:nth-child(2) { background: rgba(255,200,60,0.6); }
+        .chrome-dot:nth-child(3) { background: rgba(60,210,100,0.6); }
+
+        .chrome-url {
+          margin-left: 12px;
+          font-size: 10px;
+          letter-spacing: 0.05em;
+          color: rgba(255,255,255,0.2);
+          font-family: 'DM Mono', monospace;
+        }
+
+        .screenshot-img {
+          display: block;
+          width: 100%;
+          height: auto;
+          /* crop bottom ~30% to hide today highlight and sparse rows */
+          object-fit: cover;
+          object-position: top;
+          max-height: 340px;
+        }
+
+        /* yellow corner accent */
+        .screenshot-frame::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          right: -1px;
+          width: 40px;
+          height: 40px;
+          background: var(--yellow);
+          clip-path: polygon(100% 0, 100% 100%, 0 100%);
+          opacity: 0.6;
+        }
+
+        /* floating label */
+        .screenshot-label {
+          position: absolute;
+          bottom: -32px;
+          left: 0;
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.2);
+        }
 
         /* footer bar */
         .footer {
@@ -369,28 +423,28 @@ export default function RootClient() {
           text-orientation: mixed;
         }
 
-        /* big decorative number */
-        .deco-num {
-          position: absolute;
-          right: -20px;
-          bottom: 20px;
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: clamp(200px, 30vw, 400px);
-          color: rgba(255,255,255,0.015);
-          pointer-events: none;
-          line-height: 1;
-          user-select: none;
-          z-index: 1;
-        }
+        /* responsive */
+        @media (max-width: 860px) {
+          .hero {
+            grid-template-columns: 1fr;
+            padding: 60px 24px 40px;
+            gap: 48px;
+          }
 
-        @media (max-width: 600px) {
+        
+
+          .screenshot-frame {
+            transform: rotate(0deg);
+            animation: none;
+          }
+
+          .screenshot-img {
+            max-height: 260px;
+          }
+
           .header { padding: 20px 24px; }
-          .hero { padding: 60px 24px 40px; }
-          .stats { flex-direction: column; }
-          .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 24px; }
           .footer { padding: 16px 24px; }
           .tag { display: none; }
-          .deco-num { display: none; }
         }
 
         /* entrance animations */
@@ -403,7 +457,6 @@ export default function RootClient() {
         .headline { animation: fadeUp 0.7s ease both; animation-delay: 0.25s; opacity: 0; }
         .sub { animation: fadeUp 0.6s ease both; animation-delay: 0.4s; opacity: 0; }
         .cta-row { animation: fadeUp 0.6s ease both; animation-delay: 0.55s; opacity: 0; }
-        .stats { animation: fadeUp 0.6s ease both; animation-delay: 0.7s; opacity: 0; }
       `}</style>
 
       <canvas ref={canvasRef} className="bg" />
@@ -423,55 +476,79 @@ export default function RootClient() {
             <span className="tag-text">Team OS</span>
           </div>
 
-          <div className="deco-num">01</div>
+          {/* Left: copy */}
+          <div className="hero-copy">
+            <p className="eyebrow">Team Scheduling Software | ScheduleMe</p>
 
-          <p className="eyebrow">Team Scheduling Software | ScheduleMe</p>
+            <h1 className="headline">
+              Your team.
+              <span className="accent">On time.</span>
+            </h1>
 
-          <h1 className="headline">
-            Your team.
-            <span className="accent">On time.</span>
-          </h1>
-
-          <p className="sub">
-            Shifts, roles, and availability — managed without the spreadsheet
-            chaos. Built for teams that move fast.
-          </p>
-
-          <div className="cta-row">
-            <button className="google-btn" onClick={handleGoogleLogin}>
-              <svg
-                className="google-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 48 48"
-                width="18"
-                height="18"
-              >
-                <path
-                  fill="#FFC107"
-                  d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.2 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10 0 19-7.3 19-20 0-1.3-.1-2.3-.4-3.5z"
-                />
-                <path
-                  fill="#FF3D00"
-                  d="M6.3 14.7l6.6 4.8C14.7 16.1 18.9 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"
-                />
-                <path
-                  fill="#4CAF50"
-                  d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.7-3.4-11.3-8l-6.6 5.1C9.5 39.7 16.2 44 24 44z"
-                />
-                <path
-                  fill="#1976D2"
-                  d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.3-6.1 6.6l6.3 5.2C39.5 36.7 43 31 43 24c0-1.3-.1-2.3-.4-3.5z"
-                />
-              </svg>
-              Continue with Google
-            </button>
-
-            <p className="footnote">
-              By signing in you agree to our terms of service.
+            <p className="sub">
+              Shifts, roles, and availability — managed without the spreadsheet
+              chaos. Built for teams that move fast.
             </p>
+
+            <div className="cta-row">
+              <button className="google-btn" onClick={handleGoogleLogin}>
+                <svg
+                  className="google-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                  width="18"
+                  height="18"
+                >
+                  <path
+                    fill="#FFC107"
+                    d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.2 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10 0 19-7.3 19-20 0-1.3-.1-2.3-.4-3.5z"
+                  />
+                  <path
+                    fill="#FF3D00"
+                    d="M6.3 14.7l6.6 4.8C14.7 16.1 18.9 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"
+                  />
+                  <path
+                    fill="#4CAF50"
+                    d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.7-3.4-11.3-8l-6.6 5.1C9.5 39.7 16.2 44 24 44z"
+                  />
+                  <path
+                    fill="#1976D2"
+                    d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.3-6.1 6.6l6.3 5.2C39.5 36.7 43 31 43 24c0-1.3-.1-2.3-.4-3.5z"
+                  />
+                </svg>
+                Continue with Google
+              </button>
+
+              <p className="footnote">
+                By signing in you agree to our terms of service.
+              </p>
+            </div>
+          </div>
+
+          {/* Right: product screenshot */}
+          <div className="hero-visual">
+            <div className="screenshot-frame">
+              <div className="screenshot-chrome">
+                <span className="chrome-dot" />
+                <span className="chrome-dot" />
+                <span className="chrome-dot" />
+                <span className="chrome-url">app.scheduleme.io / schedule</span>
+              </div>
+              {/*
+                Replace the src below with your actual screenshot path.
+                e.g. src="/screenshots/calendar.png"
+                The object-fit: cover + max-height crops out the bottom sparse rows
+                and the today olive-highlight automatically.
+              */}
+              <img
+                className="screenshot-img"
+                src="/cal.png"
+                alt="ScheduleMe calendar showing team shifts"
+              />
+            </div>
+            <span className="screenshot-label">Live schedule view</span>
           </div>
         </main>
-
         {/* Footer */}
         <footer className="footer">
           <span className="footer-copy">© 2026 ScheduleMe</span>
