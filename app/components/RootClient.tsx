@@ -576,18 +576,29 @@ export default function RootClient() {
 
           {/* Left: copy */}
           <div className="hero-copy">
-            <p className="eyebrow">Team Scheduling Software | ScheduleMe</p>
-
+            <p className="eyebrow">
+              Free Team Scheduling Software | ScheduleMe
+            </p>
             <h1 className="headline">
               Your team.
               <span className="accent">On time.</span>
             </h1>
-
             <p className="sub">
               Shifts, roles, and availability — managed without the spreadsheet
               chaos. Built for teams that move fast.
             </p>
-
+            <p
+              className="sub"
+              style={{
+                marginTop: "16px",
+                borderLeft: "2px solid rgba(250,204,21,0.4)",
+                paddingLeft: "14px",
+              }}
+            >
+              Every missed shift is a customer left waiting. Every "who can
+              cover?" text is 20 minutes of your Sunday gone.
+            </p>
+            ```
             <div className="cta-row">
               <button className="google-btn" onClick={handleGoogleLogin}>
                 <svg
@@ -614,11 +625,11 @@ export default function RootClient() {
                     d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.3-6.1 6.6l6.3 5.2C39.5 36.7 43 31 43 24c0-1.3-.1-2.3-.4-3.5z"
                   />
                 </svg>
-                Continue with Google
+                Start Scheduling Free
               </button>
 
               <p className="footnote">
-                By signing in you agree to our terms of service.
+                Free to use. No credit card. Your data stays yours.
               </p>
             </div>
           </div>
